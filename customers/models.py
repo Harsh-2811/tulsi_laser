@@ -4,7 +4,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 class MachineType(models.Model):
+    class Statuses(models.IntegerChoices):
+        in_active = 0, "In Active"
+        active = 1, "Active"
     _type = models.CharField(max_length=200, verbose_name="Machine Type")
+    status = models.IntegerField(choices=Statuses.choices, default=Statuses.active)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -42,4 +46,16 @@ class Machine(models.Model):
     def __str__(self):
         return f"{self.customer.company_name} => {self.machine_type._type}"
 
+    
+class Technician(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    phone_1 = PhoneNumberField()
+    phone_2 = PhoneNumberField(null=True, blank=True)
+    expertise = models.CharField(max_length=265, null=True, blank=True)
+    address = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}, {self.phone_1}"
     
