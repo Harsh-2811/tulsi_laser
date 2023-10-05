@@ -5,6 +5,10 @@ from users.models import User
 from django.views.generic import CreateView, UpdateView, TemplateView, View
 # Create your views here.
 
+def home(request):
+    # Your view logic here
+    return render(request, 'base.html')
+
 class AddTechnician(CreateView):
     form_class = TechnicianForm
     template_name = "add_tech.html"
