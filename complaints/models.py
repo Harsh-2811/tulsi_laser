@@ -1,5 +1,6 @@
 from django.db import models
-from customers.models import Machine, Customer, Technician
+from customers.models import Machine, Customer
+from users.models import Technician
 # Create your models here.
 
 class Complain(models.Model):

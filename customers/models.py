@@ -13,7 +13,7 @@ class MachineType(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.type_
+        return self._type
 
 class Customer(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
@@ -45,17 +45,3 @@ class Machine(models.Model):
 
     def __str__(self):
         return f"{self.customer.company_name} => {self.machine_type._type}"
-
-    
-class Technician(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    phone_1 = PhoneNumberField()
-    phone_2 = PhoneNumberField(null=True, blank=True)
-    expertise = models.CharField(max_length=265, null=True, blank=True)
-    address = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.user.username}, {self.phone_1}"
-    
