@@ -28,9 +28,12 @@
 </head>
 <body>
 
-    
-    {% include 'header.html' %} 
-    {% include 'footer.html' %} 
+    <div id="layout-wrapper">
+        {% include 'header.html' %} 
+
+        {% block content %}{% endblock content %}
+        {% include 'footer.html' %} 
+    </div>
    
 
     <!-- JAVASCRIPT -->

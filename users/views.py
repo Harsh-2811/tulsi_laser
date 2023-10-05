@@ -7,7 +7,7 @@ from django.views.generic import CreateView, UpdateView, TemplateView, View
 
 def home(request):
     # Your view logic here
-    return render(request, 'base.html')
+    return render(request, 'home.html')
 
 class AddTechnician(CreateView):
     form_class = TechnicianForm
