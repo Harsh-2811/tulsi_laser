@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+{% endblock extra_css %}
+{% block content %}
+<div class="main-content">
+
+    <div class="page-content">
+        {% include 'messages.html' %}
+        <div class="container-fluid">
+            {% if form.errors %}
+                {% if form.non_field_errors %}
+                    <ul class='form-errors'>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-{% if single_field %}6{% else %}8{% endif %}">
+                    <div class="card  mt-4">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ form_title }}</h4>
+                           
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                           
+                            <div class="live-preview">
+                                <form action="" method="post">{% csrf_token %}
+                                    <div class="row">
+
+                                        {% for field in form %}
+                                            <div class="col-md-{% if single_field %}12{% else %}4{% endif %}">
+                                                <!-- Input with Label -->
+                                                <div class="mb-3">
+                                                    <label for="{{field.id}}" class="form-label">{{ field.label }}</label>
+                                                    {{ field }}
+                                                    {{ field.errors }}
+                                                </div>
+                                                
+                                            </div>
+                                        {% endfor %}
+                                        <div class="col-lg-12">
+                                            <div class="text-end">
+                                                <button type="submit" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-plus"></i> Save</button>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                    </div>
+                                    <!--end row-->
+                                </form>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> <!-- end col -->        
+            </div>
+            {% if show_lists %}
+
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-8 col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">{{ table_title }}</h4>
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div id="table-search"></div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div> <!-- end col -->
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block extra_script %}
+
+{% if show_lists %}
+<script src="{% static 'assets/libs/gridjs/gridjs.umd.js' %}"></script>
+<script>
+    {% if technicians %}
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+      columns: [ { 
+        name: 'id',
+        hidden: true
+      },"Name", "Email", "Phone1", "Phone2", "Expertise", "Address", "Created Date"
+      {
+        name: "Actions",
+        width: "100px",
+        formatter: function (e, row) {
+            console.log(e)
+          return gridjs.html(
+            `<a href='/users/technician/edit/${row.cells[0].data}/'> <i class='mdi mdi-account-edit mdi-24px'></i></a> 
+            <a href="/users/technician/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
+          );
+        },
+      },
+    ],
+      pagination: { limit: 5 },
+      search: !0,
+      data: [
+        {% for technician in technicians %}
+            [
+            "{{ technician.id }}",
+            "{{ technician.user.first_name }}",
+            "{{ technician.user.email }}",
+            "{{ technician.phone_1 }}",
+            "{{ technician.phone_2 }}",
+            "{{ technician.expertise }}",
+            "{{ technician.address|truncatewords:5 }}",
+            "{{ technician.created_at|date:'M d, Y' }}",
+
+            ],
+        {% endfor %}
+      ],
+    }).render(document.getElementById("table-search"))
+    {% elif machine_types %}
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+      columns: [ { 
+        name: 'id',
+        hidden: true
+      },
+      {
+        name : "Status Hidden",
+        hidden: true
+      },"Machine Type",{
+        name: "Status",
+        formatter: function (e, row) {
+            console.log(row.cells[1].data)
+         if (row.cells[1].data == 1){
+            return gridjs.html(
+                '<span class="badge badge-soft-success">Active</span>'
+              );
+         }else{
+            return gridjs.html(
+                '<span class="badge badge-soft-danger">In Active</span>'
+              );
+         }
+          
+        },
+      }, "Created Date",
+      {
+        name: "Actions",
+        width: "100px",
+        formatter: function (e, row) {
+          return gridjs.html(
+            `<a href='/customers/machine_type/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
+            <a href="/customers/machine_type/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
+          );
+        },
+      },
+    ],
+      pagination: { limit: 5 },
+      search: !0,
+      data: [
+        {% for type in machine_types %}
+            [
+            "{{ type.id }}",
+            "{{ type.status }}",
+            "{{ type }}",
+            "",
+            "{{ type.created_at|date:'M d, Y' }}",
+
+            ],
+        {% endfor %}
+      ],
+    }).render(document.getElementById("table-search"))
+    {% endif %}
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script>
+  {% comment %} $("#id_machine").change(function () {
+    var url = "{% url 'getCompanyByMachine' %}"  // get the url of the `load_cities` view
+    var machine_id = $(this).val();  // get the selected country ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'machine_id': machine_id       // add the country id to the GET parameters
+      },
+      success: function (data) {   // `data` is the return of the `load_cities` view function
+        $("#id_customer").html(data);  // replace the contents of the city input with the data that came from the server
+      }
+    });
+
+  }); {% endcomment %}
+
+
+  $("#id_customer").change(function () {
+    var url = "{% url 'getMachinesByCustomer' %}"  // get the url of the `load_cities` view
+    var customer_id = $(this).val();  // get the selected country ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'customer_id': customer_id       // add the country id to the GET parameters
+      },
+      success: function (data) {   // `data` is the return of the `load_cities` view function
+        $("#id_machine").html(data);  // replace the contents of the city input with the data that came from the server
+      }
+    });
+
+  });
+</script>
+{% endif %}
+{% endblock extra_script %}

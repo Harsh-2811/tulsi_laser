@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+{% endblock extra_css %}
+{% block content %}
+<div class="main-content">
+
+    <div class="page-content">
+        {% include 'messages.html' %}
+        <div class="container-fluid">
+            {% if form.errors %}
+                {% if form.non_field_errors %}
+                    <ul class='form-errors'>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+           
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">{{ table_title }}</h4>
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div id="table-search"></div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div> <!-- end col -->
+            </div>
+           
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block extra_script %}
+
+
+<script src="{% static 'assets/libs/gridjs/gridjs.umd.js' %}"></script>
+<script>
+
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+      columns: [ { 
+        name: 'id',
+        hidden: true
+      },"Company Name", "Manager", "Email", "Company No", "Manager No", "Created Date",
+      {
+        name: "Actions",
+        width: "100px",
+        formatter: function (e, row) {
+            console.log(e)
+          return gridjs.html(
+            `<a href='/customers/customers/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
+            <a href="/customers/customers/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
+          );
+        },
+      },
+    ],
+      pagination: { limit: 5 },
+      search: !0,
+      data: [
+        {% for customer in customers %}
+            [
+            "{{ customer.id }}",
+            "{{ customer.company_name }}",
+            "{{ customer.manager_name }}",
+            "{{ customer.user.email }}",
+            "{{ customer.company_mobile_no }}",
+            "{{ customer.manager_mobile_no }}",
+            "{{ customer.created_at|date:'M d, Y' }}",
+
+            ],
+        {% endfor %}
+      ],
+    }).render(document.getElementById("table-search"))
+    
+</script>
+
+{% endblock extra_script %}

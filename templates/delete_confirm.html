@@ -1,0 +1,40 @@
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="main-content">
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-4">
+                    <div class="card  mt-4">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ form_title }}</h4>
+                           
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                           
+                            <div class="live-preview">
+                                <form method="post" class="card">
+                                    {% csrf_token %}
+                                    <h2>Confirm Delete</h2>
+                                    <p>Are you sure that you want to delete "{{object}}"?</p>
+                                    <p class="form-buttons">
+                                        <input type="submit" class="btn btn-primary" value="Delete">
+                                        <a href="{{ list_url }}" class="btn btn-outline">Cancel</a>
+                                    </p>
+                                </form>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> <!-- end col -->        
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+{%endblock content%}

@@ -14,3 +14,9 @@ class TechnicianForm(forms.ModelForm):
 
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email, username=email).exists():
+            raise forms.ValidationError("This email address is already exists. Please supply a different email address.")
+        return email
