@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'customers',
     'complaints',
     "phonenumber_field",
-    "searchableselect"
+    # "searchableselect"
 ]
 
 MIDDLEWARE = [

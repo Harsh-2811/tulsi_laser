@@ -18,7 +18,7 @@
                 {% endif %}
             {% endif %}
             <div class="row" style="justify-content:center">
-                <div class="col-xxl-{% if single_field %}6{% else %}8{% endif %}">
+                <div class="col-xxl-12">
                     <div class="card  mt-4">
                         <div class="card-header align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">{{ form_title }}</h4>
@@ -95,11 +95,7 @@
                                     {% endfor %}
                                 </td>
                             {% endfor %}
-                                    {% if allow_first_delete %}
-                                      <td>
-                                        <a href="#" class="remove-machine" style="color:red"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>    
-                                      </td>
-                                    {% endif %}
+                                   
                                         </tr>
                                     {% endfor %}
                                 </tbody>

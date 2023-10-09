@@ -7,7 +7,7 @@ class Complain(models.Model):
     class Statuses(models.IntegerChoices):
         all = 0, "All"
         new = 1, "New"
-        pending = 2, "Pending"
+        accepted = 2, "Accepted"
         running = 3, "Running"
         completed = 4, "Completed"
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -26,3 +26,11 @@ class Complain(models.Model):
     def __str__(self):
         return f"{self.customer.company_name}, {self.machine.code}, {self.date}"
     
+class Payment(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

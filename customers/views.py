@@ -36,7 +36,7 @@ class EdiMachineType(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form_title"] = "Udpate Machine Type" 
+        context["form_title"] = "Update Machine Type" 
         return context
 
     def form_valid(self, form):
