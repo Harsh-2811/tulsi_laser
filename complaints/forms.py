@@ -11,7 +11,7 @@ class ForeignKeyDatalistWidget(forms.TextInput):
         attrs['list'] = f'list_{name}'
         rendered = super().render(name, value, attrs=attrs, renderer=renderer)
         choices = self.queryset.values_list('pk', 'company_name')
-        options = ''.join(f'<option value="{pk}">{name}</option>' for pk, name in choices)
+        options = ''.join(f'<option value="{pk}">{company_name}</option>' for pk, company_name in choices)
         return f'{rendered}<datalist id="list_{name}">{options}</datalist>'
     
 class ComplainForm(forms.ModelForm):
@@ -20,7 +20,7 @@ class ComplainForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
-            'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
+            # 'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
         }
     
     def __init__(self, *args, **kwargs) -> None:
