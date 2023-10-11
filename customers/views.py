@@ -7,6 +7,11 @@ from .models import MachineType, Customer
 from django.http import HttpResponseRedirect
 from users.models import User
 from .utils import CustomerInline
+from rest_framework import generics, status
+from rest_framework.response import Response
+from complaints.models import Complain
+from .serializers import ComplainSerializer
+
 # Create your views here.
 
 class MachineTypes(CreateView, ListView):
@@ -163,11 +168,6 @@ class DeleteCustomers(DeleteView):
         self.object.user.delete()
         messages.success(self.request, "Customer was deleted successfully.")
         return HttpResponseRedirect(success_url)
-
-from rest_framework import generics, status
-from rest_framework.response import Response
-from complaints.models import Complain
-from .serializers import ComplainSerializer
 
 class ComplainCreateView(generics.CreateAPIView):
     queryset = Complain.objects.all()
