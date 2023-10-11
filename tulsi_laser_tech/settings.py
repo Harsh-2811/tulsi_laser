@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'customers',
     'complaints',
     "phonenumber_field",
+    "rest_framework"
 ]
 
 MIDDLEWARE = [

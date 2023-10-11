@@ -27,3 +27,21 @@ class AddCustomer(CustomerInline, CreateView):
             return {
                 'machines': MachineFormSet(self.request.POST or None, prefix='machines'),
             }
+
+
+from rest_framework import generics, status
+from rest_framework.response import Response
+from complaints.models import Complain
+from .serializers import ComplainSerializer
+
+class ComplainCreateView(generics.CreateAPIView):
+    queryset = Complain.objects.all()
+    serializer_class = ComplainSerializer
+
+class ComplainUpdateView(generics.UpdateAPIView):
+    queryset = Complain.objects.all()
+    serializer_class = ComplainSerializer
+
+class ComplainRetrieveView(generics.RetrieveAPIView):
+    queryset = Complain.objects.all()
+    serializer_class = ComplainSerializer
