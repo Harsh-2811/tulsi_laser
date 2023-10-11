@@ -6,7 +6,7 @@
             <div class="d-flex">
                 <!-- LOGO -->
                 <div class="navbar-brand-box horizontal-logo">
-                    <a href="index.html" class="logo logo-dark">
+                    <a href="{% url 'home' %}" class="logo logo-dark">
                         <span class="logo-sm">
                             <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
                         </span>
@@ -15,7 +15,7 @@
                         </span>
                     </a>
 
-                    <a href="index.html" class="logo logo-light">
+                    <a href="{% url 'home' %}" class="logo logo-light">
                         <span class="logo-sm">
                             <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
                         </span>
@@ -48,8 +48,8 @@
                             </div>
 
                             <div class="dropdown-item bg-transparent text-wrap">
-                                <a href="index.html" class="btn btn-soft-secondary btn-sm btn-rounded">how to setup <i class="mdi mdi-magnify ms-1"></i></a>
-                                <a href="index.html" class="btn btn-soft-secondary btn-sm btn-rounded">buttons <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="{% url 'home' %}" class="btn btn-soft-secondary btn-sm btn-rounded">how to setup <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="{% url 'home' %}" class="btn btn-soft-secondary btn-sm btn-rounded">buttons <i class="mdi mdi-magnify ms-1"></i></a>
                             </div>
                             <!-- item-->
                             <div class="dropdown-header mt-2">
@@ -129,7 +129,7 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="index.html" class="logo logo-dark">
+        <a href="{% url 'home' %}" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
             </span>
@@ -138,7 +138,7 @@
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="index.html" class="logo logo-light">
+        <a href="{% url 'home' %}" class="logo logo-light">
             <span class="logo-sm">
                 <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
             </span>
@@ -157,13 +157,14 @@
             <div id="two-column-menu">
             </div>
             <ul class="navbar-nav" id="navbar-nav">
-                <li class="menu-title"><span data-key="t-menu">Menu</span></li>
-                <li class="nav-item">
+                {% comment %} <li class="menu-title"><span data-key="t-menu">Menu</span></li> {% endcomment %}
+                {% comment %} <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'home' %}">
                         <i class="mdi mdi-speedometer"></i> <span data-key="t-dashboards">Dashboard</span>
                     </a>
-                </li>
-
+                </li> {% endcomment %}
+                
+    
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'machine_types' %}">
                         <i class="mdi mdi-tools"></i> <span data-key="t-dashboards">Machines</span>
@@ -204,7 +205,37 @@
                         <i class="mdi mdi-cash"></i> <span data-key="t-dashboards">Payments</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'services' %}">
+                        <i class="mdi mdi-toolbox"></i> <span data-key="t-dashboards">Services</span>
+                    </a>
+                </li>
                 
+
+                <li class="nav-item">
+                    <a href="{% url 'machine_types' %}" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInvoices">
+                        <i class="mdi mdi-speedometer"></i>Reports
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarInvoices">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{% url 'machine_types' %}" class="nav-link" ><i class="mdi mdi-plus"></i> Machines </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'customers' %}" class="nav-link" ><i class="mdi mdi-eye"></i> Complaints </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{% url 'customers' %}" class="nav-link" ><i class="mdi mdi-eye"></i> Payment </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'customers' %}" class="nav-link" ><i class="mdi mdi-eye"></i> Service </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
 
               
 

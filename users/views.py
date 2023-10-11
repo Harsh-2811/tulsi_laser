@@ -6,12 +6,25 @@ from users.models import User, Technician
 from django.views.generic import CreateView, UpdateView, TemplateView, View, ListView, DeleteView
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-
+from customers.models import Customer, Machine, MachineType
+from complaints.models import Complain
+from django.utils import timezone
 # Create your views here.
 
 def home(request):
     # Your view logic here
-    return render(request, 'home.html')
+    total_customers = Customer.objects.count()
+    total_machines = Machine.objects.count()
+    todays_complaints = Complain.objects.filter(date=timezone.now().date()).count()
+    this_month_complaints = Complain.objects.filter(date__month=timezone.now().date().month).count()
+    machine_types = MachineType.objects.count()
+
+    complaints = Complain.objects.filter(date=timezone.now().date()).order_by('-created_at')
+    if 'status' in request.GET:
+        if request.GET['status'] != "0":
+            complaints = complaints.filter(status = request.GET['status'])
+    complaint_statuses = Complain.Statuses.choices
+    return render(request, 'home.html',{"total_customers":total_customers, "total_machines":total_machines, "todays_complaints":todays_complaints, "this_month_complaints":this_month_complaints, "machine_types":machine_types, "complaints":complaints, "complaint_statuses":complaint_statuses})
 
 class Technicians(CreateView, ListView):
     form_class = TechnicianForm

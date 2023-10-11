@@ -1,6 +1,7 @@
 from django import forms
-from complaints.models import Complain, Payment
+from complaints.models import Complain, Payment, Service
 from customers.models import Customer
+from django.utils import timezone
 # from searchableselect.widgets import SearchableSelect
 class ForeignKeyDatalistWidget(forms.TextInput):
     def __init__(self, queryset, *args, **kwargs):
@@ -19,14 +20,15 @@ class ComplainForm(forms.ModelForm):
         model = Complain
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            # 'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            'date':forms.DateInput(format='dd/mm/YYYY', attrs={'class': 'form-control', 'type':'date', 'format': 'dd/mm/yyyy'})
             # 'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
         }
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.fields.pop('status')
-
+        self.fields['date'].initial = timezone.now().date()
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
                 visible.field.widget.attrs['class'] = 'form-select'
@@ -38,13 +40,35 @@ class PaymentForm(forms.ModelForm):
         model = Payment
         fields = "__all__"
         widgets = {
-            'start_date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
-            'end_date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
-            'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
+            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            # 'end_date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            # 'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
         }
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.fields['date'].initial = timezone.now().date()
+
+        for visible in self.visible_fields():
+            if isinstance(visible.field.widget, forms.Select):
+                visible.field.widget.attrs['class'] = 'form-select'
+            else:
+                visible.field.widget.attrs['class'] = 'form-control'
+
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = "__all__"
+        widgets = {
+            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'})
+        }
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields.pop('status')
+        self.fields['date'].initial = timezone.now().date()
+
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
                 visible.field.widget.attrs['class'] = 'form-select'

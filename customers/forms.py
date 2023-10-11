@@ -1,6 +1,7 @@
 from customers.models import MachineType, Machine, Customer
 from django import forms
 from django.forms import inlineformset_factory
+from django.utils import timezone
 class MachineTypeForm(forms.ModelForm):
     class Meta:
         model = MachineType
@@ -55,6 +56,8 @@ class MachineForm(forms.ModelForm):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.fields.pop('customer')
+        self.fields['purchase_date'].initial = timezone.now()
+
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
                 visible.field.widget.attrs['class'] = 'form-select'

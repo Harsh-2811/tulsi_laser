@@ -29,14 +29,18 @@ class Complain(models.Model):
 class Payment(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-
+    amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.0)
+    date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class Service(models.Model):
+
+    class Statuses(models.IntegerChoices):
+        active = 1, "Active"
+        completed = 2, "Completed"
+
     date = models.DateField(null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
@@ -44,6 +48,6 @@ class Service(models.Model):
     service_details = models.CharField(max_length=265)
     in_serial_no = models.CharField(max_length=265)
     out_serial_no = models.CharField(max_length=265)
-
+    status = models.IntegerField(choices=Statuses.choices, default=Statuses.active)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

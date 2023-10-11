@@ -22,11 +22,11 @@
                     <div class="card  mt-4">
                         <div class="card-header align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">{{ form_title }}</h4>
-                           
+                            
                         </div><!-- end card header -->
 
                         <div class="card-body">
-                           
+                         
                             <div class="live-preview">
                                 <form action="" method="post">{% csrf_token %}
                                     <div class="row">
@@ -62,8 +62,17 @@
             <div class="row" style="justify-content:center">
                 <div class="col-xxl-12 col-md-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">{{ table_title }}</h4>
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ table_title }}</h4>
+                            {% if statuses %}
+                            <div class="flex-shrink-0 ">
+                              <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="location = this.value;">
+                                  {% for status in statuses %}
+                                  <option value="{% if status.0 == 0 %}{{filter_url}}{%else%}{{filter_url}}?status={{status.0}}{%endif%}" {% if request.GET.status|add:'0' == status.0 %}selected{%endif%}>{{status.1}}</option>
+                                  {% endfor%}
+                              </select>
+                            </div>
+                            {% endif %}
                         </div><!-- end card header -->
 
                         <div class="card-body">
@@ -213,7 +222,7 @@
          }
           
         },
-      }, "Created Date",
+      },"address", "Created Date",
       {
         name: "Actions",
         width: "100px",
@@ -238,6 +247,7 @@
             "{{ complaint.technician.user.first_name }}",
             "{{ complaint.issue }}",
             "",
+            "{{ complaint.address|truncatewords:5 }}",
             "{{ complaint.created_at|date:'M d, Y' }}",
 
 
@@ -256,8 +266,8 @@
       },
       "Company",
       "Machine",
-      "Start Date",
-      "End Date",
+      "Date",
+      "Amount",
       "Created Date",
       {
         name: "Actions",
@@ -278,9 +288,84 @@
             "{{ payment.id }}",
             "{{ payment.machine.code }}",
             "{{ payment.customer.company_name }}",
-            "{{ payment.start_date|date:'M d, Y' }}",
-            "{{ payment.end_date|date:'M d, Y' }}",
+            "{{ payment.date|date:'M d, Y' }}",
+            "{{ payment.amount }}",
             "{{ payment.created_at|date:'M d, Y' }}",
+
+
+            ],
+        {% endfor %}
+      ],
+    }).render(document.getElementById("table-search"))
+
+    {% elif services %}
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+      columns: [ { 
+        name: 'id',
+        hidden: true
+      },
+      { 
+        name: 'Status',
+        hidden: true
+      },
+      "Date",
+      "Machine",
+      "Company",
+      "Technician",
+      "Service",
+      "In Serial No",
+      "Out Serial No",
+
+
+      {
+        name: "Status",
+
+        formatter: function (e, row) {
+         if (row.cells[1].data == 1){
+            return gridjs.html(
+                '<span class="badge badge-soft-primary">Active</span>'
+              );
+         }else if(row.cells[1].data == 2){
+            return gridjs.html(
+                '<span class="badge badge-soft-success">Completed</span>'
+              );
+         }          
+        },
+      },
+      "Created Date",
+      {
+        name: "Actions",
+        width: "100px",
+        formatter: function (e, row) {
+          return gridjs.html(
+            `<a href='/complaints/services/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
+            <a href="/complaints/services/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
+          );
+        },
+      },
+    ],
+      pagination: { limit: 5 },
+      search: !0,
+      data: [
+        {% for service in services %}
+            [
+            "{{ service.id }}",
+            "{{ service.status }}",
+
+            "{{ service.date|date:'M d, Y' }}",
+            "{{ service.machine.code }}",
+            "{{ service.customer.company_name }}",
+            "{{ service.technician.user.first_name }}",
+            "{{ service.service_details }}",
+
+            "{{ service.in_serial_no }}",
+            "{{ service.out_serial_no }}",
+
+
+
+            "",
+            "{{ service.created_at|date:'M d, Y' }}",
 
 
             ],
@@ -306,6 +391,16 @@
       }
     });
 
+    var address_url = "{% url 'getAddressByCustomer' %}"
+    $.ajax({                       // initialize an AJAX request
+      url: address_url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'customer_id': customer_id       // add the country id to the GET parameters
+      },
+      success: function (data) {   // `data` is the return of the `load_cities` view function
+       $("#id_address").val(data['address'])  // replace the contents of the city input with the data that came from the server
+      }
+    });
   });
 </script>
 {% endif %}
