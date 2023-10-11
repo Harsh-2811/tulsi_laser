@@ -12,6 +12,7 @@
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'assets/libs/gridjs/theme/mermaid.min.css' %}">
 
     <!-- Layout config Js -->
     <script src="{% static 'assets/js/layout.js' %}"></script>
@@ -23,7 +24,21 @@
     <link href="{% static 'assets/css/app.min.css' %}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{% static 'assets/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
+    {% block extra_css %}
 
+    {% endblock extra_css %}
+    <style>
+        .errorlist{
+            list-style: none;
+            color: red;
+            font-weight: 500;
+            padding-left: 0;
+            margin-top: 2px;
+        }
+        textarea{
+            height:50px
+        }
+    </style>
 
 </head>
 <body>
@@ -31,7 +46,9 @@
     <div id="layout-wrapper">
         {% include 'header.html' %} 
 
-        {% block content %}{% endblock content %}
+        {% block content %}
+        
+        {% endblock content %}
         {% include 'footer.html' %} 
     </div>
    
@@ -52,7 +69,7 @@
 
 <!-- App js -->
 <script src="{% static 'assets/js/app.js' %}"></script>
-
+{% block extra_script %}{% endblock extra_script %}
 </body>
 
 

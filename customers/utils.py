@@ -1,9 +1,10 @@
 from customers.forms import CustomerForm
 from customers.models import Customer
+from django.shortcuts import redirect
 class CustomerInline():
     form_class = CustomerForm
     model = Customer
-    template_name = "customer_create.html"
+    template_name = "add_customer.html"
 
     def form_valid(self, form):
         named_formsets = self.get_named_formsets()
@@ -19,31 +20,19 @@ class CustomerInline():
             if formset_save_func is not None:
                 formset_save_func(formset)
             else:
+                formset.customer = self.object
                 formset.save()
-        return redirect('products:list_products')
+        return redirect('customers')
 
-    def formset_variants_valid(self, formset):
-        """
-        Hook for custom formset saving.Useful if you have multiple formsets
-        """
-        variants = formset.save(commit=False)  # self.save_formset(formset, contact)
-        # add this 2 lines, if you have can_delete=True parameter 
-        # set in inlineformset_factory func
-        for obj in formset.deleted_objects:
-            obj.delete()
-        for variant in variants:
-            variant.product = self.object
-            variant.save()
-
-    def formset_images_valid(self, formset):
+    def formset_machines_valid(self, formset):
         """
         Hook for custom formset saving. Useful if you have multiple formsets
         """
-        images = formset.save(commit=False)  # self.save_formset(formset, contact)
+        machines = formset.save(commit=False)  # self.save_formset(formset, contact)
         # add this 2 lines, if you have can_delete=True parameter 
         # set in inlineformset_factory func
         for obj in formset.deleted_objects:
             obj.delete()
-        for image in images:
-            image.product = self.object
-            image.save()
+        for machine in machines:
+            machine.customer = self.object
+            machine.save()

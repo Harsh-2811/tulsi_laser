@@ -7,7 +7,7 @@ class MachineType(models.Model):
     class Statuses(models.IntegerChoices):
         in_active = 0, "In Active"
         active = 1, "Active"
-    _type = models.CharField(max_length=200, verbose_name="Machine Type")
+    _type = models.CharField(max_length=200, verbose_name="Machine Type", unique=True)
     status = models.IntegerField(choices=Statuses.choices, default=Statuses.active)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -15,14 +15,22 @@ class MachineType(models.Model):
     def __str__(self):
         return self._type
 
+    def html_status(self):
+        from django.utils.html import format_html
+        if self.status:
+            return format_html('<span class="badge badge-soft-success">Active</span>') 
+        else:
+            return format_html('<span class="badge badge-soft-warning">In Active</span>') 
+
+
 class Customer(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     company_name = models.CharField(max_length=265)
-    company_mobile_no = PhoneNumberField()
+    company_mobile_no = PhoneNumberField(unique=True)
     manager_name = models.CharField(max_length=265)
-    manager_mobile_no = models.CharField(max_length=265)
-    address = models.TextField(null=True, blank=True)
+    manager_mobile_no = models.CharField(max_length=265, unique=True)
     complain_limit = models.IntegerField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -35,7 +43,7 @@ class Machine(models.Model):
         monthly = "monthly", "Monthly"
 
     code = models.CharField(max_length=100)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="machines")
     machine_type = models.ForeignKey(MachineType, on_delete=models.CASCADE)
     purchase_date = models.DateField()
     warranty = models.CharField(choices=Warranty.choices, max_length=100)
@@ -44,4 +52,4 @@ class Machine(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.customer.company_name} => {self.machine_type._type}"
+        return f"{self.code}"

@@ -16,13 +16,13 @@ class User(AbstractUser):
     
 class Technician(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    phone_1 = PhoneNumberField()
-    phone_2 = PhoneNumberField(null=True, blank=True)
+    phone_1 = PhoneNumberField(unique=True)
+    phone_2 = PhoneNumberField(null=True, blank=True, unique=True)
     expertise = models.CharField(max_length=265, null=True, blank=True)
     address = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.username}, {self.phone_1}"
+        return f"{self.user.username} ({self.phone_1})"
     
