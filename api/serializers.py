@@ -5,14 +5,6 @@ from customers.models import Machine, Customer
 from users.models import Technician
 
 
-class ComplainFilter(filters.FilterSet):
-    class Meta:
-        model = Complain
-        fields = {
-            'status': ['exact'],
-        }
-
-
 class UpdateStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complain
@@ -48,6 +40,10 @@ class ComplainSerializer(serializers.ModelSerializer):
 
 
 class ComplainOutcomeSerializer(serializers.ModelSerializer):
+    technician = TechnicianSerializer()
+    complain = ComplainSerializer()
+
     class Meta:
         model = ComplainOutcome
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['created_at', 'updated_at']
