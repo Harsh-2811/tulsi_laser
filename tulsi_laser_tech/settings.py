@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "rest_framework",
     "django_filters",
+    "rest_framework.authtoken"
     # "searchableselect"
 ]
 

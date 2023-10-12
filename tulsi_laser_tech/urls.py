@@ -26,5 +26,6 @@ urlpatterns = [
     path("customers/",include('customers.urls')),
     path("complaints/",include('complaints.urls')),
     path("api/",include('api.urls')),
+    path("api-auth/", include("rest_framework.urls")),
     # re_path('^searchableselect/', include('searchableselect.urls')),
 ]
