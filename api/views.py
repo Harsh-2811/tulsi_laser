@@ -22,14 +22,14 @@ class ComplainViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # @action(detail=True, methods=['patch'])
-    # def update_status(self, request, pk=None):
-    #     instance = self.get_object()
-    #     serializer = UpdateStatusSerializer(instance, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @action(detail=True, methods=['patch'])
+    def partial_update_status(self, request, pk=None):
+        instance = self.get_object()
+        serializer = UpdateStatusSerializer(instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ComplainOutcomeViewSet(viewsets.ReadOnlyModelViewSet):
