@@ -37,11 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'api',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     'customers',
     'complaints',
     'reports',
     "phonenumber_field",
-    "django_filters"
+    "rest_framework",
+    "django_filters",
+    "rest_framework.authtoken"
     # "searchableselect"
 ]
 
@@ -105,6 +110,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -117,6 +128,16 @@ USE_I18N = True
 
 USE_TZ = True
 
+SPECTACULAR_SETTINGS = {
+     'SCHEMA_PATH_PREFIX': r'/api/',
+    "SWAGGER_UI_DIST": "SIDECAR",  # shorthand to use the sidecar instead
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+    "TITLE": "FORM DATA API",
+    "DESCRIPTION": "FORM DATA APIs",
+    "VERSION": "1.0.0",
+    "COMPONENT_SPLIT_REQUEST": True,
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
