@@ -1,10 +1,29 @@
 from rest_framework import serializers
-from users.models import User
+from complaints.models import Complain, ComplainOutcome
+from django_filters import rest_framework as filters
 
 
-class UserSerializer(serializers.ModelSerializer):
-
+class ComplainFilter(filters.FilterSet):
     class Meta:
-        model = User
+        model = Complain
+        fields = {
+            'status': ['exact'],
+        }
+
+
+class UpdateStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Complain
+        fields = ['status']
+
+
+class ComplainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Complain
         fields = '__all__'
-        read_only_fields = ('username', )
+
+
+class ComplainOutcomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComplainOutcome
+        fields = '__all__'
