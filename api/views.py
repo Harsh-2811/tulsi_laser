@@ -7,7 +7,7 @@ from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateSt
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
-
+from rest_framework.permissions import  IsAuthenticated
 
 class ComplainViewSet(viewsets.ModelViewSet):
     queryset = Complain.objects.all()
@@ -42,7 +42,8 @@ class ComplainViewSet(viewsets.ModelViewSet):
 class ComplainOutcomeByCustomerID(ListCreateAPIView):
     queryset = ComplainOutcome.objects.all()
     serializer_class = ComplainOutcomeSerializer
-
+    permission_classes = (IsAuthenticated,)
+    
     def get_queryset(self):
         # Assuming the URL parameter is named customer_id
         customer_id = self.kwargs['customer_id']
