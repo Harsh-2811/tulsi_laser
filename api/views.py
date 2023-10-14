@@ -8,11 +8,12 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import  IsAuthenticated
+from .permissions import IsTechnicianUser 
 
 class ComplainViewSet(viewsets.ModelViewSet):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,IsTechnicianUser)
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = {
         "status": ["exact"]
