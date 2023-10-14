@@ -40,9 +40,17 @@ class ComplainSerializer(serializers.ModelSerializer):
 
 
 class ComplainOutcomeSerializer(serializers.ModelSerializer):
-    technician = TechnicianSerializer()
-    complain = ComplainSerializer()
+    complain = ComplainSerializer(source='complain', read_only=True)
+    technician = TechnicianSerializer(source='technician', read_only=True)
 
+    class Meta:
+        model = ComplainOutcome
+        # fields = '__all__'
+        exclude = ['created_at', 'updated_at']
+
+
+class ComplainOutcomeCreateSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = ComplainOutcome
         # fields = '__all__'
