@@ -13,7 +13,7 @@ from .permissions import IsTechnicianUser
 class ComplainViewSet(viewsets.ModelViewSet):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
-    permission_classes = (IsAuthenticated,IsTechnicianUser)
+    permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = {
         "status": ["exact"]
@@ -40,6 +40,12 @@ class ComplainViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get_queryset(self):
+        user = self.request.user
+        if IsTechnicianUser().has_permission(self.request, self):
+            return Complain.objects.filter(technician__user=user)
+        else:
+            return Complain.objects.all()
 
 class ComplainOutcomeByCustomerID(ListCreateAPIView):
     queryset = ComplainOutcome.objects.all()
