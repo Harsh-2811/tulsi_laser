@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from complaints.models import Complain, ComplainOutcome
-from django_filters import rest_framework as filters
 from customers.models import Machine, Customer
 from users.models import Technician
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class UpdateStatusSerializer(serializers.ModelSerializer):
@@ -50,8 +52,15 @@ class ComplainOutcomeSerializer(serializers.ModelSerializer):
 
 
 class ComplainOutcomeCreateSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = ComplainOutcome
         # fields = '__all__'
         exclude = ['created_at', 'updated_at']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+        extra_kwargs = {'password': {'write_only': True}}
