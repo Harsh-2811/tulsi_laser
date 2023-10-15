@@ -49,7 +49,7 @@
       columns: [ { 
         name: 'id',
         hidden: true
-      },"Company Name", "Manager", "Email", "Company No", "Manager No", "Created Date",
+      }, "Email" ,"Company Name", "Manager", "Company No", "Manager No", "Complain Limit", "Created Date",
       {
         name: "Actions",
         width: "100px",
@@ -68,11 +68,13 @@
         {% for customer in customers %}
             [
             "{{ customer.id }}",
+            "{{ customer.user.email }}",
+
             "{{ customer.company_name }}",
             "{{ customer.manager_name }}",
-            "{{ customer.user.email }}",
             "{{ customer.company_mobile_no }}",
             "{{ customer.manager_mobile_no }}",
+            "{{ customer.complain_limit }}",
             "{{ customer.created_at|date:'M d, Y' }}",
 
             ],

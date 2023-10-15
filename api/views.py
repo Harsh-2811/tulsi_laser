@@ -3,14 +3,14 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from complaints.models import Complain, ComplainOutcome
 from rest_framework.generics import ListCreateAPIView
-from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer
+from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsTechnicianUser
 from django.contrib.auth import get_user_model
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -18,7 +18,8 @@ from rest_framework.authtoken.models import Token
 User = get_user_model()
 
 
-class UserLogin(APIView):
+class UserLogin(GenericAPIView):
+    serializer_class = LoginSerializer
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')

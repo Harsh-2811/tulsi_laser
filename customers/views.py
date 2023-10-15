@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from customers.forms import MachineTypeForm, CustomerForm, MachineFormSet, EditMachineTypeForm
-from django.views.generic import CreateView, UpdateView, TemplateView, View, ListView, DeleteView
+from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.contrib import messages
 from .models import MachineType, Customer
 from django.http import HttpResponseRedirect
@@ -92,8 +92,8 @@ class AddCustomer(CustomerInline, CreateView):
 
     def form_valid(self, form):
         username = self.request.POST['email']
-        name = self.request.POST['name']
-        user = User.objects.create(username=username, email=username, first_name=name, password="TulsiLaser@123")
+        name = self.request.POST['company_name']
+        user = User.objects.create_user(username=username, email=username, first_name=name, password="TulsiLaser@123", role=User.Roles.customer)
         form.instance.user = user
         messages.success(self.request, "Customer added successfully!!!")
         return super().form_valid(form)

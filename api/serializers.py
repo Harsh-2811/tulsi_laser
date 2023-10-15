@@ -6,7 +6,10 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+    
 class UpdateStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complain
@@ -42,8 +45,8 @@ class ComplainSerializer(serializers.ModelSerializer):
 
 
 class ComplainOutcomeSerializer(serializers.ModelSerializer):
-    complain = ComplainSerializer(source='complain', read_only=True)
-    technician = TechnicianSerializer(source='technician', read_only=True)
+    complain = ComplainSerializer(read_only=True)
+    technician = TechnicianSerializer(read_only=True)
 
     class Meta:
         model = ComplainOutcome

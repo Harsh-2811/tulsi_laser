@@ -1,10 +1,12 @@
 from django.urls import path
-from .views import Complaints, getCompanyByMachine, getMachinesByCustomer, getAddressByCustomer, EditComplain, DeleteComplain, Payments, EditPayment, DeletePayment, Services, EditService, DeleteService
+from .views import Complaints, getCompanyByMachine, getMachinesByCustomer, getAddressByCustomer, checkIfComplainExistForDay, EditComplain, DeleteComplain, Payments, EditPayment, DeletePayment, Services, EditService, DeleteService
 urlpatterns = [
     path("complaints/",Complaints.as_view(), name="complaints"),
     path("getCompanyByMachine/", getCompanyByMachine, name="getCompanyByMachine"),
     path("getMachinesByCustomer/", getMachinesByCustomer, name="getMachinesByCustomer"),
     path("getAddressByCustomer/", getAddressByCustomer, name="getAddressByCustomer"),
+    path("checkIfComplainExistForDay/<int:mid>/", checkIfComplainExistForDay, name="checkIfComplainExistForDay"),
+
     path("complaints/edit/<int:pk>/",EditComplain.as_view(),name="edit_complaints"),
     path("complaints/delete/<int:pk>/",DeleteComplain.as_view(),name="delete_complaints"),
 

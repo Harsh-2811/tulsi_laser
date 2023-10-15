@@ -8,19 +8,19 @@
                 <div class="navbar-brand-box horizontal-logo">
                     <a href="{% url 'home' %}" class="logo logo-dark">
                         <span class="logo-sm">
-                            <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
+                            <img src="{% static 'assets/images/logo.png' %}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{% static 'assets/images/logo-dark.png' %}" alt="" height="17">
+                            <img src="{% static 'assets/images/logo.png' %}" alt="" height="60">
                         </span>
                     </a>
 
                     <a href="{% url 'home' %}" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
+                            <img src="{% static 'assets/images/logo.png' %}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{% static 'assets/images/logo-light.png' %}" alt="" height="17">
+                            <img src="{% static 'assets/images/logo.png' %}" alt="" height="60">
                         </span>
                     </a>
                 </div>
@@ -134,7 +134,7 @@
                 <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
             </span>
             <span class="logo-lg">
-                <img src="{% static 'assets/images/logo-dark.png' %}" alt="" height="17">
+                <img src="{% static 'assets/images/logo.png' %}" alt="" height="60">
             </span>
         </a>
         <!-- Light Logo-->
@@ -143,7 +143,7 @@
                 <img src="{% static 'assets/images/logo-sm.png' %}" alt="" height="22">
             </span>
             <span class="logo-lg">
-                <img src="{% static 'assets/images/logo-light.png' %}" alt="" height="17">
+                <img src="{% static 'assets/images/logo.png' %}" alt="" height="60">
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
@@ -219,18 +219,16 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarInvoices">
                         <ul class="nav nav-sm flex-column">
+                         
                             <li class="nav-item">
-                                <a href="{% url 'machine_types' %}" class="nav-link" ><i class="mdi mdi-plus"></i> Machines </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'customers' %}" class="nav-link" ><i class="mdi mdi-eye"></i> Complaints </a>
+                                <a href="{% url 'report_complaints' %}" class="nav-link" > Complaints </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="{% url 'customers' %}" class="nav-link" ><i class="mdi mdi-eye"></i> Payment </a>
+                                <a href="{% url 'report_machine_types' %}" class="nav-link" > Machine Type </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'customers' %}" class="nav-link" ><i class="mdi mdi-eye"></i> Service </a>
+                                <a href="{% url 'report_payment' %}" class="nav-link" > Payment </a>
                             </li>
 
                         </ul>

@@ -14,11 +14,10 @@ from django.utils import timezone
 def home(request):
     # Your view logic here
     total_customers = Customer.objects.count()
-    total_machines = Machine.objects.count()
+    total_machines = Machine.objects.all()
     todays_complaints = Complain.objects.filter(date=timezone.now().date()).count()
     this_month_complaints = Complain.objects.filter(date__month=timezone.now().date().month).count()
     machine_types = MachineType.objects.count()
-
     complaints = Complain.objects.filter(date=timezone.now().date()).order_by('-created_at')
     if 'status' in request.GET:
         if request.GET['status'] != "0":
@@ -44,7 +43,7 @@ class Technicians(CreateView, ListView):
     def form_valid(self, form):
         username = self.request.POST['email']
         name = self.request.POST['name']
-        user = User.objects.create(username=username, email=username, first_name=name, password="TulsiLaser@123")
+        user = User.objects.create_user(username=username, email=username, first_name=name, password="TulsiLaser@123", role=User.Roles.technician)
         form.instance.user = user
         messages.success(self.request, "Technician added successfully!!!")
         return super().form_valid(form)

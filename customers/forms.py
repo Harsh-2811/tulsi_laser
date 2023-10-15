@@ -32,10 +32,10 @@ class EditMachineTypeForm(forms.ModelForm):
 
 class CustomerForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
-    name = forms.CharField(widget=forms.TextInput())
+    # name = forms.CharField(widget=forms.TextInput())
     class Meta:
         model = Customer
-        fields = ("email","name","company_name","company_mobile_no","manager_name","manager_mobile_no","complain_limit","address")
+        fields = ("email","company_name","company_mobile_no","manager_name","manager_mobile_no","complain_limit","address")
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)

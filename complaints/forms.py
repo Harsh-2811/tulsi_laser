@@ -20,15 +20,15 @@ class ComplainForm(forms.ModelForm):
         model = Complain
         fields = "__all__"
         widgets = {
-            # 'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
-            'date':forms.DateInput(format='dd/mm/YYYY', attrs={'class': 'form-control', 'type':'date', 'format': 'dd/mm/yyyy'})
-            # 'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
+            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+      
         }
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.fields.pop('status')
         self.fields['date'].initial = timezone.now().date()
+        self.fields['technician'].required = False
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
                 visible.field.widget.attrs['class'] = 'form-select'

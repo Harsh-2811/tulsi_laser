@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
-
+from datetime import datetime, timedelta
 # Create your models here.
 class MachineType(models.Model):
     class Statuses(models.IntegerChoices):
@@ -53,3 +53,31 @@ class Machine(models.Model):
 
     def __str__(self):
         return f"{self.code}"
+    
+    @property
+    def total_complaints(self):
+        from complaints.models import Complain
+        return Complain.objects.filter(machine = self).count()
+    
+    @property
+    def warranty_ends_this_month(self):
+        warranty = self.warranty
+        duration = self.duration
+        if warranty == Machine.Warranty.yearly:
+            days = ((duration*365)+duration//4)
+            print(days)
+            warranty_ends_in = self.created_at + timedelta(days=int(days))
+        elif warranty == Machine.Warranty.monthly:
+            days = duration * 30
+            warranty_ends_in = self.created_at + timedelta(days=days)
+        
+        today_month = datetime.today().month
+        end_month = warranty_ends_in.month
+
+        current_year = datetime.today().year
+        end_year = warranty_ends_in.year
+
+        if today_month == end_month and current_year == end_year:
+            return "Yes"
+
+        return f"No (Ending Date : {warranty_ends_in.strftime('%d-%m-%Y')})"

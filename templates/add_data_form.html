@@ -193,6 +193,10 @@
         name : "Status Hidden",
         hidden: true
       },
+      {
+        name : "Repeated Hidden",
+        hidden: true
+      },
       "Date",
       "Machine",
       "Company",
@@ -207,7 +211,7 @@
               );
          }else if(row.cells[1].data == 2){
             return gridjs.html(
-                '<span class="badge badge-soft-secondary">Accepted</span>'
+                '<span class="badge badge-soft-secondary">Pending</span>'
               );
          }
          else if(row.cells[1].data == 3){
@@ -222,7 +226,30 @@
          }
           
         },
-      },"address", "Created Date",
+      },"address", {
+        name: "Repeated",
+        width: "100px",
+        formatter: function (e, row) {
+         
+            if(row.cells[2].data == "0" || row.cells[2].data == "1"){
+              return gridjs.html(
+                `
+                <span class="badge border border-primary text-primary">Single Time</span>
+          
+                `
+                );
+             }else{
+              return gridjs.html(
+                `
+                <span class="badge bg-danger ms-1"> ${row.cells[2].data} Times</span>
+
+                `
+                );
+             }
+           
+
+        },
+      }, "Created Date",
       {
         name: "Actions",
         width: "100px",
@@ -241,6 +268,7 @@
             [
             "{{ complaint.id }}",
             "{{ complaint.status }}",
+            "{{ complaint.repeated_today }}",
             "{{ complaint.date|date:'M d, Y' }}",
             "{{ complaint.machine.code }}",
             "{{ complaint.customer.company_name }}",
@@ -248,6 +276,8 @@
             "{{ complaint.issue }}",
             "",
             "{{ complaint.address|truncatewords:5 }}",
+            "",
+
             "{{ complaint.created_at|date:'M d, Y' }}",
 
 

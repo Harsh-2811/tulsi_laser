@@ -41,5 +41,7 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
+    path("reports/",include('reports.urls')),
+
     # re_path('^searchableselect/', include('searchableselect.urls')),
 ]

@@ -6,6 +6,7 @@ from .models import Complain, Payment, Service
 from django.http import HttpResponseRedirect, JsonResponse
 from customers.models import Machine, Customer
 from complaints.forms import ComplainForm, PaymentForm, ServiceForm
+from django.utils import timezone
 # Create your views here.
 
 import django_filters
@@ -40,7 +41,13 @@ class Complaints(CreateView, FilterView):
         return context
 
     def form_valid(self, form):
+        obj = form.save(commit=False)
+        if obj.technician:
+            obj.status = Complain.Statuses.pending
+        else:
+            obj.status = Complain.Statuses.new
         messages.success(self.request, "Complaint Generated successfully!!!")
+        
         return super().form_valid(form)
 
 def getCompanyByMachine(request):
@@ -58,6 +65,11 @@ def getAddressByCustomer(request):
     customer = Customer.objects.get(id = cid)
     return JsonResponse({"address":customer.address}, safe=False)
 
+def checkIfComplainExistForDay(request, mid):
+    is_complain_exits = Complain.objects.filter(machine_id = mid, date = timezone.now().date()).exists()
+    return JsonResponse({"is_complain_exits":is_complain_exits}, safe=False)
+
+
 class EditComplain(UpdateView):
     form_class = ComplainForm
     template_name = "add_data_form.html"
@@ -70,6 +82,11 @@ class EditComplain(UpdateView):
         return context
 
     def form_valid(self, form):
+        obj = form.save(commit=False)
+        if obj.technician:
+            obj.status = Complain.Statuses.pending
+        else:
+            obj.status = Complain.Statuses.new
         messages.success(self.request, "Complaint Updated successfully!!!")
         return super().form_valid(form)
 

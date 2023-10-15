@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+{% endblock extra_css %}
+{% block content %}
+<div class="main-content">
+
+    <div class="page-content">
+        {% include 'messages.html' %}
+        <div class="container-fluid">
+            {% if form.errors %}
+                {% if form.non_field_errors %}
+                    <ul class='form-errors'>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+     
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-{% if single_field %}6{% else %}12{% endif %}">
+                    <div class="card  mt-4">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ form_title }}</h4>
+                            
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                         
+                            <div class="live-preview">
+                                <form action="" method="post" id="reportFrom">{% csrf_token %}
+                                    <input type="hidden" name="type_value" id="type_value" />
+                                    <div class="row">
+
+                                        {% for field in form %}
+                                            <div class="col-md-{% if single_field %}12{% else %}3{% endif %}">
+                                                <!-- Input with Label -->
+                                                <div class="mb-3">
+                                                    {% if field.field.widget.attrs.data_type == 'checkbox' %}
+                                                    {{ field }}
+                                                    <label for="{{field.id}}" class="form-check-label">{{ field.label }}</label>
+
+                                                    {{ field.errors }}
+                                                    {% else %}
+                                                    <label for="{{field.id}}" class="form-label">{{ field.label }}</label>
+                                                    {{ field }}
+                                                    {{ field.errors }}
+                                                    {% endif %}
+                                                </div>
+                                                
+                                            </div>
+                                        {% endfor %}
+                                        <div class="col-lg-12 mt-3">
+                                            <div class="text-center">
+                                                <button type="submit" class="btn btn-primary waves-effect waves-light" style="width:300px">Get Report</button>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                    </div>
+                                    <!--end row-->
+                                </form>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> <!-- end col -->       
+         
+
+            </div>
+
+            {% if show_lists %}
+     
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ table_title }}</h4>
+                            {% if statuses %}
+                            <div class="flex-shrink-0 ">
+                              <select class="form-select form-select-sm" id="type_filter" aria-label=".form-select-sm example">
+                                  {% for status in statuses %}
+                                  <option value="{{status.0}}" {% if request.GET.status == status.0 %}selected{%endif%}>{{status.1}}</option>
+                                  {% endfor%}
+                              </select>
+                            </div>
+                            {% endif %}
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div id="table-search"></div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div> <!-- end col -->
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block extra_script %}
+
+{% if show_lists %}
+<script src="{% static 'assets/libs/gridjs/gridjs.umd.js' %}"></script>
+<script>
+    {% if complaint_outcomes %}
+
+        document.getElementById("table-search") &&
+        new gridjs.Grid({
+        columns: [ { 
+            name: 'id',
+            hidden: true
+        },{ 
+            name: 'type',
+            hidden: true
+        },
+        { 
+            name: 'water_mark',
+            hidden: true
+        },{ 
+            name: 'alignment',
+            hidden: true
+        },
+        { 
+            name: 'ampere',
+            hidden: true
+        },
+        { 
+            name: 'temp',
+            hidden: true
+        },
+        { 
+            name: 'voltage',
+            hidden: true
+        },"Company Name", "Company Mobile No",{
+            name: "Complain Type",
+            formatter: function (e, row) {
+             if (row.cells[1].data == "Genuine"){
+                return gridjs.html(
+                    '<span class="badge bg-success">Genuine</span>'
+                  );
+             }else if(row.cells[1].data == "Fake"){
+                return gridjs.html(
+                    '<span class="badge bg-danger">Fake</span>'
+                  );
+             }
+             }
+              
+            },
+          , "Issue", "Remark", {
+            name: "Water Filter",
+            formatter: function (e, row) {
+             if (row.cells[2].data == "True"){
+                return gridjs.html(
+                    '<i class="mdi mdi-check-circle" style="color:green"></i>'
+                  );
+             }else if(row.cells[2].data == "False"){
+                return gridjs.html(
+                    '<i class="mdi mdi-close-circle" style="color:red"></i>'
+
+                  );
+             }
+             }
+              
+            }, {
+                name: "Alignment",
+                formatter: function (e, row) {
+                    if (row.cells[3].data == "True"){
+                       return gridjs.html(
+                           '<i class="mdi mdi-check-circle" style="color:green"></i>'
+                         );
+                    }else if(row.cells[3].data == "False"){
+                       return gridjs.html(
+                           `<h5><span class="badge border border-secondary text-secondary" style="width:150px">Ampere : ${row.cells[4].data}
+                           <br/> Temprature : ${row.cells[5].data}
+                           <br/> Voltage : ${row.cells[6].data} </span></h5>`
+       
+                         );
+                    }
+                    }
+                  
+                },"Challan","Amount", "Date"
+        ],
+        pagination: { limit: 5 },
+        search: !0,
+        data: [
+            {% for outcome in complaint_outcomes %}
+                [
+                "{{ outcome.id }}",
+                "{{ outcome.complaint_type }}",
+                "{{ outcome.water_filter }}",
+                "{{ outcome.alignment }}",
+                "{{ outcome.ampere }}",
+                "{{ outcome.temp }}",
+                "{{ outcome.voltage }}",
+
+
+                "{{ outcome.complain.customer.company_name }}",
+                "{{ outcome.complain.customer.company_mobile_no }}",
+                "",
+                "{{ outcome.complain.issue }}",
+                "{{ outcome.remark }}",
+                "{{ outcome.water_filter }}",
+                "{{ outcome.alignment }}",
+                "{{ outcome.challan }}",
+                "{{ outcome.amount }}",
+                "{{ outcome.complain.date|date:'M d, Y' }}",
+                ],
+            {% endfor %}
+        ],
+        }).render(document.getElementById("table-search"))
+    {% elif machines %}
+    document.getElementById("table-search") &&
+        new gridjs.Grid({
+        columns: [ { 
+            name: 'id',
+            hidden: true
+        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Total Complaints","Created Date", {
+            name: "Check Complaints",
+            width: "100px",
+            formatter: function (e, row) {
+              return gridjs.html(
+                `<form action='/reports/complaints/' method="post">{% csrf_token %}
+                    <input type="hidden" name="machine" value="${row.cells[0].data}" />
+                    <button type="submit" style="border:none;padding:0;background:none"><i class="mdi mdi-eye mdi-24px"></i></button>
+                </form>`
+              );
+            },
+          }
+        ],
+        pagination: { limit: 5 },
+        search: !0,
+        data: [
+            {% for machine in machines %}
+                [
+                "{{ machine.id }}",
+                "{{ machine.code }}",
+                "{{ machine.customer.company_name }}",
+                "{{ machine.customer.company_mobile_no }}",
+                "{{ machine.purchase_date|date:'M d, Y' }}",
+                "{{ machine.get_warranty_display}}",
+                "{{ machine.duration}}",
+                "{{ machine.total_complaints}}",
+
+                "{{ machine.created_at|date:'M d, Y' }}",
+                ],
+            {% endfor %}
+        ],
+        }).render(document.getElementById("table-search"))
+        {% elif payments %}
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+      columns: [ { 
+        name: 'id',
+        hidden: true
+      },
+      "Company",
+      "Machine",
+      "Date",
+      "Amount",
+      "Created Date",
+      {
+        name: "Actions",
+        width: "100px",
+        formatter: function (e, row) {
+          return gridjs.html(
+            `<a href='/complaints/payments/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
+            <a href="/complaints/payments/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
+          );
+        },
+      },
+    ],
+      pagination: { limit: 5 },
+      search: !0,
+      data: [
+        {% for payment in payments %}
+            [
+            "{{ payment.id }}",
+            "{{ payment.machine.code }}",
+            "{{ payment.customer.company_name }}",
+            "{{ payment.date|date:'M d, Y' }}",
+            "{{ payment.amount }}",
+            "{{ payment.created_at|date:'M d, Y' }}",
+
+
+            ],
+        {% endfor %}
+      ],
+    }).render(document.getElementById("table-search"))
+    {% endif %}
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script>
+  $("#id_customer").change(function () {
+    var url = "{% url 'getMachinesByCustomer' %}"  // get the url of the `load_cities` view
+    var customer_id = $(this).val();  // get the selected country ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'customer_id': customer_id       // add the country id to the GET parameters
+      },
+      success: function (data) {   // `data` is the return of the `load_cities` view function
+        $("#id_machine").html(data);  // replace the contents of the city input with the data that came from the server
+      }
+    });
+
+    
+  });
+
+
+  const dropdown = document.getElementById("type_filter");
+
+dropdown.addEventListener("change", function() {
+  $("#type_value").val($(this).val())
+  document.getElementById("reportFrom").submit();
+});
+</script>
+{% endif %}
+{% endblock extra_script %}

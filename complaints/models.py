@@ -1,13 +1,15 @@
 from django.db import models
 from customers.models import Machine, Customer
 from users.models import Technician
+from django.utils import timezone
+
 # Create your models here.
 
 class Complain(models.Model):
     class Statuses(models.IntegerChoices):
         all = 0, "All"
         new = 1, "New"
-        accepted = 2, "Accepted"
+        pending = 2, "Pending"
         running = 3, "Running"
         completed = 4, "Completed"
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -25,6 +27,11 @@ class Complain(models.Model):
 
     def __str__(self):
         return f"{self.customer.company_name}, {self.machine.code}, {self.date}"
+    
+    @property
+    def repeated_today(self):
+        is_complain_exits = Complain.objects.filter(machine = self.machine, date = self.date).count()
+        return is_complain_exits
     
 class Payment(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -59,7 +66,7 @@ class ComplainOutcome(models.Model):
     complain = models.ForeignKey(Complain, on_delete=models.CASCADE)
     technician = models.ForeignKey(Technician, on_delete=models.CASCADE)
     complaint_type = models.CharField(choices=Complaint_types.choices, max_length=50)
-    challan = models.IntegerField(null=True, blank=True) 
+    challan = models.CharField(null=True, blank=True, max_length=20) 
     remark = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     signature = models.CharField(max_length=255)
