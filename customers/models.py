@@ -69,7 +69,7 @@ class Machine(models.Model):
             warranty_ends_in = self.created_at + timedelta(days=int(days))
         elif warranty == Machine.Warranty.monthly:
             days = duration * 30
-            warranty_ends_in = self.created_at + timedelta(days=days)
+            warranty_ends_in = self.created_at + timedelta(days=int(days))
         
         today_month = datetime.today().month
         end_month = warranty_ends_in.month
