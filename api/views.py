@@ -49,7 +49,7 @@ class ComplainViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ["id", "status"]
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], serializer_class=UpdateStatusSerializer)
     def update_status(self, request, pk=None):
         instance = self.get_object()
         serializer = UpdateStatusSerializer(instance, data=request.data)
@@ -58,7 +58,7 @@ class ComplainViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['patch'])
+    @action(detail=True, methods=['patch'], serializer_class=UpdateStatusSerializer)
     def partial_update_status(self, request, pk=None):
         instance = self.get_object()
         serializer = UpdateStatusSerializer(

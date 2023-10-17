@@ -23,7 +23,14 @@ def home(request):
         if request.GET['status'] != "0":
             complaints = complaints.filter(status = request.GET['status'])
     complaint_statuses = Complain.Statuses.choices
-    return render(request, 'home.html',{"total_customers":total_customers, "total_machines":total_machines, "todays_complaints":todays_complaints, "this_month_complaints":this_month_complaints, "machine_types":machine_types, "complaints":complaints, "complaint_statuses":complaint_statuses})
+    from_date = ""
+    to_date = ""
+    if request.method == "POST":
+        from_date = request.POST['from_date']
+        to_date = request.POST['to_date']
+        total_machines = total_machines.filter(purchase_date__range = (from_date, to_date))
+
+    return render(request, 'home.html',{"total_customers":total_customers, "total_machines":total_machines, "todays_complaints":todays_complaints, "this_month_complaints":this_month_complaints, "machine_types":machine_types, "complaints":complaints, "complaint_statuses":complaint_statuses, "from_date":from_date, "to_date":to_date})
 
 class Technicians(CreateView, ListView):
     form_class = TechnicianForm

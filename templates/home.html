@@ -169,17 +169,22 @@
                         <div class="card-header align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Machines</h4>
 
-                            <form action="javascript:void(0);">
+                            <form action="" method="post">{% csrf_token %}
                                 <div class="row row-cols-lg-auto g-3 align-items-center">
 
                                     <div class="col-12">
-                                        <label class="visually-hidden" for="inlineFormSelectPref">Duration</label>
-                                        <select class="form-select" id="inlineFormSelectPref">
-                                            <option selected>Choose Duration</option>
-                                            {% for i in '012345678911'|make_list %}
-                                                <option value="{{ forloop.counter }}">{{ forloop.counter }} Months</option>
-                                            {% endfor %}
-                                        </select>
+                                       
+                                        <div>
+                                            <label for="from_date" class="form-label">From Date</label>
+                                            <input type="date" class="form-control" id="from_date" name="from_date" {% if from_date %}value="{{from_date}}"{% endif %} required/>
+                                        </div>
+                                    </div><!--end col-->
+                                    <div class="col-12">
+                                       
+                                        <div>
+                                            <label for="to_date" class="form-label">To Date</label>
+                                            <input type="date" class="form-control" id="to_date" name="to_date" {% if to_date %}value="{{to_date}}"{% endif %} required />
+                                        </div>
                                     </div><!--end col-->
                                     
                                     <div class="col-12">
