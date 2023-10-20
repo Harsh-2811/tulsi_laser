@@ -155,3 +155,7 @@ AUTH_USER_MODEL = 'users.User'
 DATE_FORMAT ="%d/%m/%Y"
 
 USE_L10N = False
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = '/users/login/'
+LOGIN_URL = '/users/login/'

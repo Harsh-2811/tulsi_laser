@@ -1,5 +1,6 @@
 from typing import Any
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from users.models import *
 class TechnicianForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
@@ -20,3 +21,12 @@ class TechnicianForm(forms.ModelForm):
         if email and User.objects.filter(email=email, username=email).exists():
             raise forms.ValidationError("This email address is already exists. Please supply a different email address.")
         return email
+    
+
+class CustomAuthenticationForm(AuthenticationForm):
+    class Meta:
+        fields = ('username', 'password')
+    def __init__(self, *args, **kwargs):
+        super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

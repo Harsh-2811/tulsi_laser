@@ -9,8 +9,11 @@ from django.http import HttpResponseRedirect
 from customers.models import Customer, Machine, MachineType
 from complaints.models import Complain
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
+@login_required()
 def home(request):
     # Your view logic here
     total_customers = Customer.objects.count()

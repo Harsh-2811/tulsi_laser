@@ -1,8 +1,10 @@
 from django.urls import path
 from .views import ComplaintReport, MachineTypeReport, PaymentReport
+from django.contrib.auth.decorators import login_required
+
 urlpatterns = [
-    path("complaints/",ComplaintReport.as_view(), name="report_complaints"),
-    path("machine_types/",MachineTypeReport.as_view(), name="report_machine_types"),
-    path("payment/",PaymentReport.as_view(), name="report_payment"),
+    path("complaints/",login_required(ComplaintReport.as_view()), name="report_complaints"),
+    path("machine_types/",login_required(MachineTypeReport.as_view()), name="report_machine_types"),
+    path("payment/",login_required(PaymentReport.as_view()), name="report_payment"),
 
 ]
