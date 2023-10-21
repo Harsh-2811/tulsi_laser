@@ -48,7 +48,7 @@ class ComplaintReport(FormView, ListView):
         
         if machine:
             complaint_outcomes = complaint_outcomes.filter(complain__machine_id = int(machine)).select_related('complain')
-
+            print(complaint_outcomes)
         if start_date and end_date:
             complaint_outcomes = complaint_outcomes.filter(complain__date__range = (start_date, end_date)).select_related('complain')
 
