@@ -41,6 +41,7 @@ class ComplaintReport(FormView, ListView):
         alignment = data.get('alignment')
         type_value = data.get('type_value')
 
+        print(data)
         complaint_outcomes = ComplainOutcome.objects.all()
         if customer:
             complaint_outcomes = complaint_outcomes.filter(complain__customer_id = int(customer)).select_related('complain')
