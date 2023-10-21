@@ -43,10 +43,10 @@ class ComplaintReport(FormView, ListView):
 
         complaint_outcomes = ComplainOutcome.objects.all()
         if customer:
-            complaint_outcomes = complaint_outcomes.filter(complain__customer_id = customer).select_related('complain')
+            complaint_outcomes = complaint_outcomes.filter(complain__customer_id = int(customer)).select_related('complain')
         
         if machine:
-            complaint_outcomes = complaint_outcomes.filter(complain__machine_id = machine).select_related('complain')
+            complaint_outcomes = complaint_outcomes.filter(complain__machine_id = int(machine)).select_related('complain')
 
         if start_date and end_date:
             complaint_outcomes = complaint_outcomes.filter(complain__date__range = (start_date, end_date)).select_related('complain')
