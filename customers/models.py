@@ -29,13 +29,16 @@ class Customer(models.Model):
     company_mobile_no = PhoneNumberField(unique=True)
     manager_name = models.CharField(max_length=265)
     manager_mobile_no = models.CharField(max_length=265, unique=True)
-    complain_limit = models.IntegerField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.company_name
+    
+    @property
+    def total_machines(self):
+        return Machine.objects.filter(customer = self).count()
 
 class Machine(models.Model):
     class Warranty(models.TextChoices):
@@ -48,6 +51,8 @@ class Machine(models.Model):
     purchase_date = models.DateField()
     warranty = models.CharField(choices=Warranty.choices, max_length=100)
     duration = models.DecimalField(max_digits=3, decimal_places=1)
+    complain_limit = models.IntegerField(null=True, blank=True)
+    notify_on = models.IntegerField(help_text="Notify on x Months Completed", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

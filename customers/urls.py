@@ -3,7 +3,7 @@ from customers.views import  AddCustomer
 from .views import ComplainCreateView, ComplainUpdateView, ComplainRetrieveView
 from django.contrib.auth.decorators import login_required
 
-from customers.views import MachineTypes, AddCustomer, EdiMachineType, DeleteMachineType, Customers, EdiCustomers, DeleteCustomers
+from customers.views import MachineTypes, AddCustomer, EdiMachineType, DeleteMachineType, Customers, EdiCustomers, DeleteCustomers, Machines
 urlpatterns = [
     path("machine_types/",login_required(MachineTypes.as_view()), name="machine_types"),
     path("machine_type/edit/<int:pk>/",login_required(EdiMachineType.as_view()),name="edit_machine_type"),
@@ -16,5 +16,8 @@ urlpatterns = [
     path("customers/",login_required(Customers.as_view()), name="customers"),
     path("customers/edit/<int:pk>/",login_required(EdiCustomers.as_view()),name="edit_customers"),
     path("customers/delete/<int:pk>/",login_required(DeleteCustomers.as_view()),name="delete_customers"),
+
+    path("machines/",login_required(Machines.as_view()), name="machines"),
+
 
 ]

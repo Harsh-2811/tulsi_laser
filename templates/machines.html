@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">Machines</h4>
+
+                            <form action="" method="post">{% csrf_token %}
+                                <div class="row row-cols-lg-auto g-3 align-items-center">
+
+                                    <div class="col-12">
+                                       
+                                        <div>
+                                            <label for="from_date" class="form-label">From Date</label>
+                                            <input type="date" class="form-control" id="from_date" name="from_date" {% if from_date %}value="{{from_date}}"{% endif %} required/>
+                                        </div>
+                                    </div><!--end col-->
+                                    <div class="col-12">
+                                       
+                                        <div>
+                                            <label for="to_date" class="form-label">To Date</label>
+                                            <input type="date" class="form-control" id="to_date" name="to_date" {% if to_date %}value="{{to_date}}"{% endif %} required />
+                                        </div>
+                                    </div><!--end col-->
+                                    
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </form>
+
+                            {% if statuses %}
+                            <div class="flex-shrink-0 ">
+                              <select class="form-select form-select-sm" id="type_filter" aria-label=".form-select-sm example">
+                                  {% for status in statuses %}
+                                  <option value="{{status.0}}" {% if request.GET.status == status.0 %}selected{%endif%}>{{status.1}}</option>
+                                  {% endfor%}
+                              </select>
+                            </div>
+                            {% endif %}
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div id="table-search"></div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div> <!-- end col -->
+            </div>
+
+          
+
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+
+   
+</div>
+{% endblock content %}
+
+{% block extra_script %}
+<script src="{% static 'assets/libs/gridjs/gridjs.umd.js' %}"></script>
+
+<script>
+  
+    document.getElementById("table-search") &&
+        new gridjs.Grid({
+        columns: [ { 
+            name: 'id',
+            hidden: true
+        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Complain Limit", "Warranty Ends this Month",  {
+            name: "History",
+            width: "100px",
+            formatter: function (e, row) {
+              return gridjs.html(
+                `<form action='/reports/complaints/' method="post">{% csrf_token %}
+                    <input type="hidden" name="machine" value="${row.cells[0].data}" />
+                    <button type="submit" style="border:none;padding:0;background:none"><i class="mdi mdi-history mdi-24px text-primary"></i></button>
+                </form>`
+              );
+            },
+          }
+        ],
+        pagination: { limit: 5 },
+        search: !0,
+        data: [
+            {% for machine in machines %}
+                [
+                "{{ machine.id }}",
+                "{{ machine.code }}",
+                "{{ machine.customer.company_name }}",
+                "{{ machine.customer.company_mobile_no }}",
+                "{{ machine.purchase_date|date:'M d, Y' }}",
+                "{{ machine.get_warranty_display}}",
+                "{{ machine.duration}}",
+                "{{ machine.complain_limit}}",
+
+                "{{ machine.warranty_ends_this_month }}",
+    
+       
+                ""
+                ],
+            {% endfor %}
+        ],
+        }).render(document.getElementById("table-search"))
+    
+</script>
+{% endblock extra_script %}

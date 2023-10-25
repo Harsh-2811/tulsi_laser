@@ -44,7 +44,10 @@
                                 </div><!-- end col -->
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-4 px-3">
-                                        <h5 class="text-muted text-uppercase fs-13">Total Sold Machines</h5>
+                                        <h5 class="text-muted text-uppercase fs-13">Total Sold Machines
+                                            <a href="{% url 'machines' %}"><i class="mdi mdi-eye text-success fs-18 float-end align-middle"></i></a>
+                                        </h5>
+
                                         <div class="d-flex align-items-center">
                                             <div class="flex-shrink-0">
                                                 <i class="mdi mdi-locker mdi-36px text-muted"></i>
@@ -122,8 +125,11 @@
                                             <th scope="col">Date</th>
                                             <th scope="col">Machine</th>
                                             <th scope="col">Company Name</th>
-                                            <th scope="col">Manager Name</th>
                                             <th scope="col">Company Mobile Number</th>
+
+                                            <th scope="col">Manager Name</th>
+                                            <th scope="col">Manager Mobile Number</th>
+
                                             <th scope="col">Technician</th>
                                             <th scope="col">Issue</th>
                                             <th scope="col">Status</th>
@@ -136,8 +142,11 @@
                                                 <td>{{ complaint.date|date:"M, d Y"}}</td>
                                                 <td>{{ complaint.machine.code}}</td>
                                                 <td>{{ complaint.customer.company_name}}</td>
-                                                <td>{{ complaint.customer.manager_name}}</td>
                                                 <td>{{ complaint.customer.company_mobile_no}}</td>
+
+                                                <td>{{ complaint.customer.manager_name}}</td>
+                                                <td>{{ complaint.customer.manager_mobile_no}}</td>
+
                                                 <td>{{ complaint.technician.user.first_name}}</td>
                                                 <td>{{ complaint.issue}}</td>
                                                  {% if complaint.status == 1 %}
@@ -163,53 +172,7 @@
                 </div><!-- end col -->
             </div><!-- end row -->
 
-            <div class="row" style="justify-content:center">
-                <div class="col-xxl-12 col-md-12">
-                    <div class="card">
-                        <div class="card-header align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Machines</h4>
-
-                            <form action="" method="post">{% csrf_token %}
-                                <div class="row row-cols-lg-auto g-3 align-items-center">
-
-                                    <div class="col-12">
-                                       
-                                        <div>
-                                            <label for="from_date" class="form-label">From Date</label>
-                                            <input type="date" class="form-control" id="from_date" name="from_date" {% if from_date %}value="{{from_date}}"{% endif %} required/>
-                                        </div>
-                                    </div><!--end col-->
-                                    <div class="col-12">
-                                       
-                                        <div>
-                                            <label for="to_date" class="form-label">To Date</label>
-                                            <input type="date" class="form-control" id="to_date" name="to_date" {% if to_date %}value="{{to_date}}"{% endif %} required />
-                                        </div>
-                                    </div><!--end col-->
-                                    
-                                    <div class="col-12">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div><!--end col-->
-                                </div><!--end row-->
-                            </form>
-
-                            {% if statuses %}
-                            <div class="flex-shrink-0 ">
-                              <select class="form-select form-select-sm" id="type_filter" aria-label=".form-select-sm example">
-                                  {% for status in statuses %}
-                                  <option value="{{status.0}}" {% if request.GET.status == status.0 %}selected{%endif%}>{{status.1}}</option>
-                                  {% endfor%}
-                              </select>
-                            </div>
-                            {% endif %}
-                        </div><!-- end card header -->
-
-                        <div class="card-body">
-                            <div id="table-search"></div>
-                        </div><!-- end card-body -->
-                    </div><!-- end card -->
-                </div> <!-- end col -->
-            </div>
+         
 
           
 

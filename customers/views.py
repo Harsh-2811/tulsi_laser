@@ -1,9 +1,11 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from customers.forms import MachineTypeForm, CustomerForm, MachineFormSet, EditMachineTypeForm
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.contrib import messages
-from .models import MachineType, Customer
+from .models import MachineType, Customer, Machine
 from django.http import HttpResponseRedirect
 from users.models import User
 from .utils import CustomerInline
@@ -180,3 +182,15 @@ class ComplainUpdateView(generics.UpdateAPIView):
 class ComplainRetrieveView(generics.RetrieveAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
+
+class Machines(ListView):
+    template_name = "machines.html"
+    context_object_name = "machines"
+    queryset = Machine.objects.all().order_by('-created_at')
+
+    def get_queryset(self) -> QuerySet[Any]:
+        if 'customer' in self.request.GET:
+            customer = self.request.GET['customer']
+            self.queryset = self.queryset.filter(customer_id = int(customer))
+        
+        return self.queryset

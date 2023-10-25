@@ -216,14 +216,14 @@
         columns: [ { 
             name: 'id',
             hidden: true
-        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Total Complaints","Created Date", {
-            name: "Check Complaints",
+        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Created Date", {
+            name: "History",
             width: "100px",
             formatter: function (e, row) {
               return gridjs.html(
                 `<form action='/reports/complaints/' method="post">{% csrf_token %}
                     <input type="hidden" name="machine" value="${row.cells[0].data}" />
-                    <button type="submit" style="border:none;padding:0;background:none"><i class="mdi mdi-eye mdi-24px"></i></button>
+                    <button type="submit" style="border:none;padding:0;background:none"><i class="mdi mdi-history mdi-24px text-primary"></i></button>
                 </form>`
               );
             },
@@ -241,7 +241,7 @@
                 "{{ machine.purchase_date|date:'M d, Y' }}",
                 "{{ machine.get_warranty_display}}",
                 "{{ machine.duration}}",
-                "{{ machine.total_complaints}}",
+             
 
                 "{{ machine.created_at|date:'M d, Y' }}",
                 ],

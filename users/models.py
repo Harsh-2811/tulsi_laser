@@ -24,5 +24,5 @@ class Technician(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.username} ({self.phone_1})"
+        return f"{self.user.first_name} ({self.phone_1})"
     

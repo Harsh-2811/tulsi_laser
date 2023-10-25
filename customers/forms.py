@@ -35,7 +35,7 @@ class CustomerForm(forms.ModelForm):
     # name = forms.CharField(widget=forms.TextInput())
     class Meta:
         model = Customer
-        fields = ("email","company_name","company_mobile_no","manager_name","manager_mobile_no","complain_limit","address")
+        fields = ("email","company_name","company_mobile_no","manager_name","manager_mobile_no","address")
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -44,6 +44,7 @@ class CustomerForm(forms.ModelForm):
                 visible.field.widget.attrs['class'] = 'form-select'
             else:
                 visible.field.widget.attrs['class'] = 'form-control'
+        
 
 class MachineForm(forms.ModelForm):
     class Meta:
@@ -57,7 +58,7 @@ class MachineForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields.pop('customer')
         self.fields['purchase_date'].initial = timezone.now()
-
+        self.fields['machine_type'].queryset=MachineType.objects.filter(status=MachineType.Statuses.active)
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
                 visible.field.widget.attrs['class'] = 'form-select'

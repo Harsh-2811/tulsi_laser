@@ -49,7 +49,20 @@
       columns: [ { 
         name: 'id',
         hidden: true
-      }, "Email" ,"Company Name", "Manager", "Company No", "Manager No", "Complain Limit", "Created Date",
+      },
+      { 
+        name: 'total_machine',
+        hidden: true
+      }, "Email" ,"Company Name", "Manager", "Company No", "Manager No", "Created Date", {
+        name: "Machines",
+        width: "100px",
+        formatter: function (e, row) {
+            console.log(e)
+          return gridjs.html(
+            `<a href='/customers/machines/?customer=${row.cells[0].data}'>${row.cells[1].data} Machine</i>`
+          );
+        },
+      },
       {
         name: "Actions",
         width: "100px",
@@ -68,14 +81,18 @@
         {% for customer in customers %}
             [
             "{{ customer.id }}",
+            "{{ customer.total_machines }}",
+
             "{{ customer.user.email }}",
 
             "{{ customer.company_name }}",
             "{{ customer.manager_name }}",
             "{{ customer.company_mobile_no }}",
             "{{ customer.manager_mobile_no }}",
-            "{{ customer.complain_limit }}",
+           
+            
             "{{ customer.created_at|date:'M d, Y' }}",
+            "",
 
             ],
         {% endfor %}
