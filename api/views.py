@@ -14,6 +14,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import MultiPartParser
 
 User = get_user_model()
 
@@ -101,3 +102,4 @@ class ComplainOutcomeByMchindID(ListCreateAPIView):
 class ComplainOutcomeViewSet(viewsets.ModelViewSet):
     queryset = ComplainOutcome.objects.all()
     serializer_class = ComplainOutcomeSerializer
+    parser_classes = [MultiPartParser]

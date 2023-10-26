@@ -69,7 +69,7 @@ class ComplainOutcome(models.Model):
     challan = models.CharField(null=True, blank=True, max_length=20) 
     remark = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
-    signature = models.CharField(max_length=255)
+    signature = models.ImageField(upload_to="signature")
     alignment = models.BooleanField(default=False,null=True, blank=True)
     ampere = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True) 
     watt = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True) 
