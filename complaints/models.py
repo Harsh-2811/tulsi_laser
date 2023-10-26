@@ -72,6 +72,7 @@ class ComplainOutcome(models.Model):
     signature = models.CharField(max_length=255)
     alignment = models.BooleanField(default=False,null=True, blank=True)
     ampere = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True) 
+    watt = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True) 
     temp = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     voltage = models.DecimalField(max_digits=8, decimal_places=2,null=True, blank=True)
     water_filter = models.BooleanField(default=False,null=True, blank=True)
