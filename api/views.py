@@ -103,3 +103,8 @@ class ComplainOutcomeViewSet(viewsets.ModelViewSet):
     queryset = ComplainOutcome.objects.all()
     serializer_class = ComplainOutcomeSerializer
     parser_classes = [MultiPartParser]
+
+    def perform_create(self, serializer):
+        obj = serializer.save()
+        obj.complain = Complain.Statuses.completed
+        obj.save()
