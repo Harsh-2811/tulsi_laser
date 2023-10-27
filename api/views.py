@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from complaints.models import Complain, ComplainOutcome
 from rest_framework.generics import ListCreateAPIView
-from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer
+from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer ,ChangePasswordSerializer
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
@@ -37,6 +37,27 @@ class UserLogin(GenericAPIView):
 
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
+
+
+class ChangePasswordView(GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = request.user
+            old_password = serializer.validated_data['old_password']
+            new_password = serializer.validated_data['new_password']
+
+            if user.check_password(old_password):
+                user.set_password(new_password)
+                user.save()
+                return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "Invalid old password"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ComplainViewSet(viewsets.ModelViewSet):
