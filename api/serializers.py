@@ -50,16 +50,16 @@ class ComplainOutcomeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplainOutcome
-        # fields = '__all__'
-        exclude = ['created_at', 'updated_at']
+        fields = '__all__'
+        # exclude = ['created_at', 'updated_at']
 
 
 class ComplainOutcomeCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplainOutcome
-        # fields = '__all__'
-        exclude = ['created_at', 'updated_at']
+        fields = '__all__'
+        # exclude = ['created_at', 'updated_at']
 
 
 class UserSerializer(serializers.ModelSerializer):

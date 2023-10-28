@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from complaints.models import Complain, ComplainOutcome
 from rest_framework.generics import ListCreateAPIView
-from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer ,ChangePasswordSerializer
+from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer ,ChangePasswordSerializer, ComplainOutcomeCreateSerializer
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
@@ -125,6 +125,11 @@ class ComplainOutcomeViewSet(viewsets.ModelViewSet):
     queryset = ComplainOutcome.objects.all()
     serializer_class = ComplainOutcomeSerializer
     parser_classes = [MultiPartParser]
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return ComplainOutcomeCreateSerializer
+        return self.serializer_class
 
     def perform_create(self, serializer):
         obj = serializer.save()
