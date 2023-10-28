@@ -29,9 +29,13 @@ class MachineSerializer(serializers.ModelSerializer):
 
 
 class TechnicianSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField(read_only = True)
     class Meta:
         model = Technician
         fields = '__all__'
+
+    def get_name(self, instance):
+        return instance.user.first_name
 
 
 class ComplainSerializer(serializers.ModelSerializer):

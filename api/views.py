@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from complaints.models import Complain, ComplainOutcome
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView
 from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer ,ChangePasswordSerializer, ComplainOutcomeCreateSerializer
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
@@ -110,20 +110,21 @@ class ComplainOutcomeByCustomerID(ListCreateAPIView):
         return ComplainOutcome.objects.filter(complain__customer_id=customer_id)
 
 
-class ComplainOutcomeByMchindID(ListCreateAPIView):
+class ComplainOutcomeByMchindID(ListAPIView):
     queryset = ComplainOutcome.objects.all()
     serializer_class = ComplainOutcomeSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         # Assuming the URL parameter is named mchind_id
-        mchind_id = self.kwargs['mchind_id']
-        return ComplainOutcome.objects.filter(complain__mchind_id=mchind_id)
+        machine_id = self.kwargs['machine_id']
+        return ComplainOutcome.objects.filter(complain__machine_id=machine_id)
 
 
 class ComplainOutcomeViewSet(viewsets.ModelViewSet):
     queryset = ComplainOutcome.objects.all()
     serializer_class = ComplainOutcomeSerializer
+    # permission_classes = (IsAuthenticated,)
     parser_classes = [MultiPartParser]
 
     def get_serializer_class(self):

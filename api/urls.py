@@ -16,6 +16,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('complain-outcomes/<int:customer_id>/',
          ComplainOutcomeByCustomerID.as_view(), name='complain-outcomes-by-customer'),
-    path('complain-outcomes/<int:machine_id>/',
+    path('complain-outcomes/ByMachine/<int:machine_id>/',
          ComplainOutcomeByMchindID.as_view(), name='complain-outcomes-by-customer')
 ]
