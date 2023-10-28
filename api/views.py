@@ -124,7 +124,7 @@ class ComplainOutcomeByMchindID(ListAPIView):
 class ComplainOutcomeViewSet(viewsets.ModelViewSet):
     queryset = ComplainOutcome.objects.all()
     serializer_class = ComplainOutcomeSerializer
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     parser_classes = [MultiPartParser]
 
     def get_serializer_class(self):
