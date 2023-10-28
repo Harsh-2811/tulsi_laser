@@ -134,5 +134,5 @@ class ComplainOutcomeViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         obj = serializer.save()
-        obj.complain = Complain.Statuses.completed
-        obj.save()
+        obj.complain.status = Complain.Statuses.completed
+        obj.complain.save()
