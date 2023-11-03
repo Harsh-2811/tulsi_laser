@@ -10,7 +10,7 @@ from customers.models import Customer, Machine, MachineType
 from complaints.models import Complain
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
+from datetime import datetime, timedelta
 # Create your views here.
 
 @login_required()
@@ -22,6 +22,17 @@ def home(request):
     this_month_complaints = Complain.objects.filter(date__month=timezone.now().date().month).count()
     machine_types = MachineType.objects.count()
     complaints = Complain.objects.filter(date=timezone.now().date()).order_by('-created_at')
+
+    current_month = datetime.today().month
+    prev_month = (datetime.today() - timedelta(days=30)).month
+    current_year = datetime.today().year
+
+    ending_months = Machine.objects.filter(
+                              warranty_end_date__year__gte=current_year,
+                              warranty_end_date__month__gte=prev_month,
+                              warranty_end_date__year__lte=current_year,
+                              warranty_end_date__month__lte=current_month)
+    print(ending_months)
     if 'status' in request.GET:
         if request.GET['status'] != "0":
             complaints = complaints.filter(status = request.GET['status'])
@@ -33,7 +44,7 @@ def home(request):
         to_date = request.POST['to_date']
         total_machines = total_machines.filter(purchase_date__range = (from_date, to_date))
 
-    return render(request, 'home.html',{"total_customers":total_customers, "total_machines":total_machines, "todays_complaints":todays_complaints, "this_month_complaints":this_month_complaints, "machine_types":machine_types, "complaints":complaints, "complaint_statuses":complaint_statuses, "from_date":from_date, "to_date":to_date})
+    return render(request, 'home.html',{"total_customers":total_customers, "total_machines":total_machines, "todays_complaints":todays_complaints, "this_month_complaints":this_month_complaints, "machine_types":machine_types, "complaints":complaints, "complaint_statuses":complaint_statuses, "from_date":from_date, "to_date":to_date, "ending_months": ending_months})
 
 class Technicians(CreateView, ListView):
     form_class = TechnicianForm

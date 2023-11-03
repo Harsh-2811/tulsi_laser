@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" type="text/css" />
 {% endblock extra_css %}
 {% block content %}
 <div class="main-content">
@@ -22,8 +23,8 @@
                     <div class="card  mt-4">
                         <div class="card-header align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">{{ form_title }}</h4>
-                            
-                        </div><!-- end card header -->
+                            <span class="mdi mdi-alert mdi-18px" id="over_alert" style="color:red; display:none;font-size:18px">Complain Limit Over</span>
+                        </div><!-- end card header -->  
 
                         <div class="card-body">
                          
@@ -41,7 +42,10 @@
                                                 </div>
                                                 
                                             </div>
+
                                         {% endfor %}
+                                        <div class="col-lg-6 mt-3" id="history"></div>
+
                                         <div class="col-lg-12 mt-3">
                                             <div class="text-center">
                                                 <button type="submit" class="btn btn-primary waves-effect waves-light" style="width:300px"><i class="mdi mdi-check"></i> Save</button>
@@ -409,17 +413,21 @@
 <script>
   $("#id_customer").change(function () {
     var url = "{% url 'getMachinesByCustomer' %}"  // get the url of the `load_cities` view
-    var customer_id = $(this).val();  // get the selected country ID from the HTML input
+    var customer_id = $(this).select2('data')[0]['id'];  // get the selected country ID from the HTML input
+    var machine_id = $("#id_machine").select2('data')[0]['id'];
 
-    $.ajax({                       // initialize an AJAX request
-      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
-      data: {
-        'customer_id': customer_id       // add the country id to the GET parameters
-      },
-      success: function (data) {   // `data` is the return of the `load_cities` view function
-        $("#id_machine").html(data);  // replace the contents of the city input with the data that came from the server
-      }
-    });
+    if(!machine_id){
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'customer_id': customer_id       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_machine").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+    }
+    
 
     var address_url = "{% url 'getAddressByCustomer' %}"
     $.ajax({                       // initialize an AJAX request
@@ -432,6 +440,95 @@
       }
     });
   });
+
+
+  $("#id_machine").change(function () {
+ 
+    var url = "{% url 'getComplaintOutcomeByMachine' %}"  // get the url of the `load_cities` view
+    var machine_id = $(this).select2('data')[0]['id'];  // get the selected country ID from the HTML input
+    var customer_id = $("#id_customer").select2('data')[0]['id'];
+
+    var request_for = "outcomes"
+
+    if(!customer_id){
+      $.ajax({                       // initialize an AJAX request
+        url: "{% url 'getCompanyByMachine' %}",                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'machine_id': machine_id       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_customer").html(data);  
+          var firstNonEmptyOption = $("#id_customer option[value!='']:first");
+          if (firstNonEmptyOption.length > 0) {
+            firstNonEmptyOption.prop('selected', true);
+          }
+          $("#id_customer").trigger("change")
+
+          //---------------------
+          var s_customer_id = $("#id_customer").select2('data')[0]['id'];
+          $.ajax({                       // initialize an AJAX request
+            url: "{% url 'getMachinesByCustomer' %}",                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            data: {
+              'customer_id': s_customer_id       // add the country id to the GET parameters
+            },
+            success: function (data) {   
+              $("#id_machine").html(data); 
+              var selectedMachineId = $(`#id_machine option[value='${machine_id}']`);
+              if (selectedMachineId.length > 0) {
+                selectedMachineId.prop('selected', true);
+              }
+            }
+          });
+        }
+      });
+    }
+    
+    {% if request.path == "/complaints/services/" %}
+    request_for = "services"
+    {% endif %}
+
+    $.ajax({                       // initialize an AJAX request
+      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'machine_id': machine_id  ,
+        'request_for':request_for     // add the country id to the GET parameters
+      },
+      success: function (data) {   // `data` is the return of the `load_cities` view function
+        $("#history").html(data);  // replace the contents of the city input with the data that came from the server
+      }
+    });
+
+    over_url = "{% url 'checkIfLimitOver' %}"
+    $.ajax({                       // initialize an AJAX request
+      url: over_url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'machine_id': machine_id
+      },
+      success: function (data) {   // `data` is the return of the `load_cities` view function
+        console.log(data['limit_over']) 
+        if(data['limit_over'] == true){
+          $("#over_alert").css('display','block')
+        } else{
+          $("#over_alert").css('display','none')
+
+        }
+      }
+    });
+  });
+
+
+
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+<script>
+  $(document).ready(function(){
+   
+      $("#id_machine").select2();
+      $("#id_customer").select2();
+
+   
+  })
+</script>
+
 {% endif %}
 {% endblock extra_script %}

@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.contrib import messages
-from .models import Complain, Payment, Service
+from .models import Complain, Payment, Service, ComplainOutcome
 from django.http import HttpResponseRedirect, JsonResponse
 from customers.models import Machine, Customer
-from complaints.forms import ComplainForm, PaymentForm, ServiceForm
+from complaints.forms import ComplainForm, PaymentForm, ServiceForm, ServiceFormCreate
 from django.utils import timezone
 # Create your views here.
 
@@ -167,12 +167,12 @@ class DeletePayment(DeleteView):
     
 
 class Services(CreateView, FilterView):
-    form_class = ServiceForm
+    form_class = ServiceFormCreate
     template_name = "add_data_form.html"
     context_object_name = "services"
     success_url = reverse_lazy('services')
     filterset_class = ServiceFilter
-    queryset = Service.objects.all().order_by('-created_at')
+    queryset = Service.objects.all().order_by('-created_at').exclude(status = Service.Statuses.completed)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -200,6 +200,11 @@ class EditService(UpdateView):
         return context
 
     def form_valid(self, form):
+        service = form.save(commit=False)
+        if service.completed_date and service.completed_by:
+            service.status = Service.Statuses.completed # Change 'new_status' to your desired status
+            service.save()
+
         messages.success(self.request, "Service Updated successfully!!!")
         return super().form_valid(form)
 
@@ -222,3 +227,21 @@ class DeleteService(DeleteView):
         messages.success(self.request, "Service was deleted successfully.")
         return HttpResponseRedirect(success_url)
     
+
+def getComplaintOutcomeByMachine(request):
+    mid = request.GET['machine_id']
+    request_for = request.GET['request_for']
+    if request_for == "outcomes":
+        outcomes = ComplainOutcome.objects.filter(complain__machine_id = mid).select_related('complain')[:5]
+        return render(request, "complain_history.html", {"outcomes":outcomes})
+    elif request_for == "services":
+        services = Service.objects.filter(machine_id = mid)[:5]
+        return render(request, "complain_history.html", {"services":services})
+    
+def checkIfLimitOver(request):
+    mid = request.GET['machine_id']
+    machine = Machine.objects.get(id = mid)
+    if Complain.objects.filter(machine = machine).count() > machine.complain_limit:
+        return JsonResponse({"limit_over": True})
+    else:
+        return JsonResponse({"limit_over": False})

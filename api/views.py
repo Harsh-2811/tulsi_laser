@@ -15,6 +15,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -62,7 +63,7 @@ class ChangePasswordView(GenericAPIView):
 
 
 class ComplainViewSet(viewsets.ModelViewSet):
-    queryset = Complain.objects.all()
+    queryset = Complain.objects.all().order_by('-created_at')
     serializer_class = ComplainSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
@@ -94,13 +95,13 @@ class ComplainViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if IsTechnicianUser().has_permission(self.request, self):
-            return Complain.objects.filter(technician__user=user)
+            return Complain.objects.filter(technician__user=user, created_at__date = timezone.now().date())
         else:
-            return Complain.objects.all()
+            return Complain.objects.filter(created_at__date = timezone.now().date())
 
 
 class ComplainOutcomeByCustomerID(ListCreateAPIView):
-    queryset = ComplainOutcome.objects.all()
+    queryset = ComplainOutcome.objects.all().order_by('-created_at')
     serializer_class = ComplainOutcomeSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -111,7 +112,7 @@ class ComplainOutcomeByCustomerID(ListCreateAPIView):
 
 
 class ComplainOutcomeByMchindID(ListAPIView):
-    queryset = ComplainOutcome.objects.all()
+    queryset = ComplainOutcome.objects.all().order_by('-created_at')
     serializer_class = ComplainOutcomeSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -122,7 +123,7 @@ class ComplainOutcomeByMchindID(ListAPIView):
 
 
 class ComplainOutcomeViewSet(viewsets.ModelViewSet):
-    queryset = ComplainOutcome.objects.all()
+    queryset = ComplainOutcome.objects.all().order_by('-created_at')[:5]
     serializer_class = ComplainOutcomeSerializer
     permission_classes = (IsAuthenticated,)
     parser_classes = [MultiPartParser]
