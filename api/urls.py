@@ -1,7 +1,7 @@
 # urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ComplainViewSet, ComplainOutcomeByCustomerID, ComplainOutcomeViewSet, ComplainOutcomeByMchindID, UserLogin ,ChangePasswordView
+from .views import ComplainViewSet, ComplainOutcomeByCustomerID, ComplainOutcomeViewSet, ComplainOutcomeByMchindID, UserLogin ,ChangePasswordView, SaveFCMToken
 from django.urls import path
 
 # Create a router and register our viewset with it.
@@ -17,5 +17,7 @@ urlpatterns = [
     path('complain-outcomes/<int:customer_id>/',
          ComplainOutcomeByCustomerID.as_view(), name='complain-outcomes-by-customer'),
     path('complain-outcomes/ByMachine/<int:machine_id>/',
-         ComplainOutcomeByMchindID.as_view(), name='complain-outcomes-by-customer')
+         ComplainOutcomeByMchindID.as_view(), name='complain-outcomes-by-customer'),
+    path("saveFCMToken/",SaveFCMToken.as_view(),name="saveFCMToken")
+
 ]

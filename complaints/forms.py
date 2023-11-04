@@ -60,10 +60,10 @@ class ServiceForm(forms.ModelForm):
         model = Service
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
-            'completed_date':  forms.DateInput( attrs={'class':'form-control', 'type':'date'})
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
+            'completed_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
         }
-    
+        
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.fields.pop('status')

@@ -120,4 +120,3 @@ class DeleteTechnician(DeleteView):
         self.object.user.delete()
         messages.success(self.request, "Technician was deleted successfully.")
         return HttpResponseRedirect(success_url)
-

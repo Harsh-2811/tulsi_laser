@@ -13,6 +13,7 @@ class User(AbstractUser):
 
     email = models.CharField(null=True, blank=True, max_length=265)
     role = models.CharField(choices=Roles.choices, max_length=50)
+    push_token = models.CharField(max_length=265, null=True, blank=True)
     
 class Technician(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

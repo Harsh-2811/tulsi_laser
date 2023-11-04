@@ -528,6 +528,10 @@
 
    
   })
+  $(document).ready(function() {
+    $('#id_date').attr('input_formats', '%d/%m/%Y');
+    $('#id_completed_date').attr('input_formats', '%d/%m/%Y');
+  });
 </script>
 
 {% endif %}

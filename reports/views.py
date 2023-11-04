@@ -38,6 +38,7 @@ class ComplaintReport(FormView, ListView):
         start_date = data.get('start_date')
         end_date = data.get('end_date')
         customer = data.get('customer')
+        technician = data.get('technician')
         machine = data.get('machine')
         water_filter = data.get('water_filter')
         alignment = data.get('alignment')
@@ -50,7 +51,10 @@ class ComplaintReport(FormView, ListView):
         
         if machine:
             complaint_outcomes = complaint_outcomes.filter(complain__machine_id = int(machine)).select_related('complain')
-            print(complaint_outcomes)
+        
+        if technician:
+            complaint_outcomes = complaint_outcomes.filter(complain__technician_id = int(technician)).select_related('complain')
+
         if start_date and end_date:
             complaint_outcomes = complaint_outcomes.filter(complain__date__range = (start_date, end_date)).select_related('complain')
 

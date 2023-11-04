@@ -46,6 +46,15 @@ class Complaints(CreateView, FilterView):
             obj.status = Complain.Statuses.pending
         else:
             obj.status = Complain.Statuses.new
+
+        from pyfcm import FCMNotification
+        from django.conf import settings
+
+        push_service = FCMNotification(api_key=settings.FCM_TOKEN)
+        try:
+            result = push_service.notify_single_device(registration_id=obj.technician.user.push_token, message_title="New Complain assigned to you.", message_body=f"Complain for machine {obj.machine.code} of {obj.customer.company_name}")
+        except:
+            pass
         messages.success(self.request, "Complaint Generated successfully!!!")
         
         return super().form_valid(form)

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from complaints.models import Complain, ComplainOutcome
 from rest_framework.generics import ListCreateAPIView, ListAPIView
-from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer ,ChangePasswordSerializer, ComplainOutcomeCreateSerializer
+from .serializers import ComplainSerializer, ComplainOutcomeSerializer, UpdateStatusSerializer, LoginSerializer ,ChangePasswordSerializer, ComplainOutcomeCreateSerializer, FCMSerializer
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
@@ -137,3 +137,16 @@ class ComplainOutcomeViewSet(viewsets.ModelViewSet):
         obj = serializer.save()
         obj.complain.status = Complain.Statuses.completed
         obj.complain.save()
+
+    
+class SaveFCMToken(GenericAPIView):
+    serializer_class = FCMSerializer
+    def post(self, request):
+        data = self.request.data
+        user = request.user
+        if 'fcm_token' in data:
+            user.push_token = data['fcm_token']
+            user.save()
+            return Response({'type':'success','message':'Token has been saved for this user'}, status=HTTP_200_OK)
+        else:
+            return Response({'type':'error','message':'Not valid Payload'}, status=status.HTTP_200_OK)

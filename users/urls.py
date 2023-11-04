@@ -9,5 +9,4 @@ urlpatterns = [
     path("technicians/",login_required(Technicians.as_view()), name="technicians"),
     path("technician/edit/<int:pk>/",login_required(EdiTechnician.as_view()),name="edit_techician"),
     path("technician/delete/<int:pk>/",login_required(DeleteTechnician.as_view()),name="delete_techician"),
-
 ]

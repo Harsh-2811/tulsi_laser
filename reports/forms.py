@@ -13,7 +13,7 @@ class ComplainReportForm(forms.ModelForm):
     alignment = forms.BooleanField(widget=forms.CheckboxInput())
     class Meta:
         model = Complain
-        fields = ('customer', 'machine', 'start_date', 'end_date')
+        fields = ('customer', 'machine', 'start_date', 'end_date', 'technician')
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)

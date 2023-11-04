@@ -82,3 +82,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         if data['new_password'] != data['confirm_password']:
             raise serializers.ValidationError("New passwords do not match.")
         return data
+    
+class FCMSerializer(serializers.Serializer):
+    fcm_token = serializers.CharField(required=True)
