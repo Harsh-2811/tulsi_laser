@@ -12,13 +12,15 @@
             <div class="modal-body">
                 {% for outcome in outcomes %}
                     <h5 class="fs-15">
-                        Issue : {{ outcome.complain.issue }},  Solution : {{ outcome.remark }},  Date : {{ outcome.complain.updated_at|date:"d, M Y" }}
+                        Issue : {{ outcome.complain.issue }} on  {{ outcome.complain.updated_at|date:"d, M Y" }}
                     </h5>
                    
-                    <p class="text-muted"></p>
+                    <p class="text-muted">Resolved By : {{outcome.complain.technician.user.first_name}}</p>
+                    <p class="text-muted">Remark : {{outcome.remark}}</p>
                     <p class="text-muted">Water Filter : {% if outcome.water_filter %}<i class="mdi mdi-check-circle" style="color:green"></i>{% else %}<i class="mdi mdi-close-circle" style="color:red"></i>{% endif %}</p>
                     <p class="text-muted">Alignment : {% if outcome.alignment %}<i class="mdi mdi-check-circle" style="color:green"></i>{% else %}<i class="mdi mdi-close-circle" style="color:red"></i>{% endif %}</p>
-                    {% if outcome.alignment %}<p>Ampere: {{ outcome.ampere }}, Watt: {{ outcome.watt }}, Voltage: {{ outcome.voltage }}, Temprature: {{ outcome.temp }}</p>{% endif %}
+                    {% if outcome.alignment %}<p class="text-muted">Ampere: {{ outcome.ampere }}, Watt: {{ outcome.watt }}, Voltage: {{ outcome.voltage }}, Temprature: {{ outcome.temp }}</p>{% endif %}
+                    <hr/>
                     {% comment %} <p class="text-muted">Alignment : {{ }}</p> {% endcomment %}
                 {% endfor %}
             </div>
