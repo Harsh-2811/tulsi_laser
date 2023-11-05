@@ -46,9 +46,6 @@ class CustomAuthenticationForm(AuthenticationForm):
                     tech = Technician.objects.get(user = user)
                     if not tech.web_access:
                         raise forms.ValidationError("You not have permission for this platform")
-                    self.user_cache = authenticate(username=username, password=password)
                 else:
                     raise forms.ValidationError("You not have permission for this platform")
-            else:
-                self.user_cache = authenticate(username=username, password=password)
-        return self.cleaned_data
+        return super().clean()
