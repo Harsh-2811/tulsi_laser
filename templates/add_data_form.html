@@ -2,6 +2,8 @@
 {% load static %}
 {% block extra_css %}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'assets/css/zebra_datepicker.css' %}" type="text/css">
+
 {% endblock extra_css %}
 {% block content %}
 <div class="main-content">
@@ -520,6 +522,10 @@
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/zebra_pin@2.0.0/dist/zebra_pin.min.js"></script>
+        <script src="{% static 'assets/js/zebra_datepicker.min.js' %}"></script>
+        {% comment %} <script src="{% static 'assets/js/example_date.js' %}"></script> {% endcomment %}
+
 <script>
   $(document).ready(function(){
    
@@ -530,8 +536,9 @@
    
   })
   $(document).ready(function() {
-    $('#id_date').attr('input_formats', '%d/%m/%Y');
-    $('#id_completed_date').attr('input_formats', '%d/%m/%Y');
+    $('#id_date').Zebra_DatePicker({
+        format: 'd/m/Y'
+    });
   });
 </script>
 

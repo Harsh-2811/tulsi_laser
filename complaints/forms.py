@@ -20,7 +20,7 @@ class ComplainForm(forms.ModelForm):
         model = Complain
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            # 'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
       
         }
     
@@ -40,7 +40,7 @@ class PaymentForm(forms.ModelForm):
         model = Payment
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            # 'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
             # 'end_date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
             # 'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
         }
@@ -60,8 +60,8 @@ class ServiceForm(forms.ModelForm):
         model = Service
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
-            'completed_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
+            # 'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
+            # 'completed_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
         }
         
     def __init__(self, *args, **kwargs) -> None:

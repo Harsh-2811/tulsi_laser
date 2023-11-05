@@ -52,7 +52,7 @@ class MachineForm(forms.ModelForm):
         model = Machine
         fields = "__all__"
         widgets = {
-            'purchase_date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            'purchase_date': forms.DateInput( attrs={'class':'form-control purchase_date'}),
         }
     
     def __init__(self, *args, **kwargs) -> None:
@@ -65,6 +65,9 @@ class MachineForm(forms.ModelForm):
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
                 visible.field.widget.attrs['class'] = 'form-select'
+            elif isinstance(visible.field.widget, forms.DateInput):
+                visible.field.widget.attrs['class'] = 'form-control purchase_date'
+
             else:
                 visible.field.widget.attrs['class'] = 'form-control'
 

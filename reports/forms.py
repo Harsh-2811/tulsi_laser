@@ -4,10 +4,10 @@ from customers.models import Machine
 from users.models import Technician
 class ComplainReportForm(forms.ModelForm):
     start_date = forms.DateField(
-        widget=forms.DateInput(attrs={"type":"date"})
+        
     )
     end_date = forms.DateField(
-        widget=forms.DateInput(attrs={"type":"date"})
+        
     )
     water_filter = forms.BooleanField(widget=forms.CheckboxInput())
     alignment = forms.BooleanField(widget=forms.CheckboxInput())
@@ -55,10 +55,10 @@ class PaymentReportForm(forms.ModelForm):
 
 class ServiceReportForm(forms.ModelForm):
     start_date = forms.DateField(
-        widget=forms.DateInput(attrs={"type":"date"})
+    
     )
     end_date = forms.DateField(
-        widget=forms.DateInput(attrs={"type":"date"})
+       
     )
     class Meta:
         model = Service

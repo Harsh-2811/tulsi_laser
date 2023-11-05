@@ -36,6 +36,7 @@ class Complaints(CreateView, FilterView):
         queryset = kwargs.pop('object_list', None)
         if queryset is None:
             self.object_list = self.model.objects.all()
+
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Add Complaint" 
         context["table_title"] = "Complaints" 
@@ -185,6 +186,7 @@ class Services(CreateView, FilterView):
     context_object_name = "services"
     success_url = reverse_lazy('services')
     filterset_class = ServiceFilter
+    model = Service
     queryset = Service.objects.all().order_by('-created_at').exclude(status = Service.Statuses.completed)
 
     def get_context_data(self, **kwargs):

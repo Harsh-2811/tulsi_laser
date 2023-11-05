@@ -62,6 +62,10 @@ class Service(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.service_details
+    
+
 class ComplainOutcome(models.Model):
     class Complaint_types(models.TextChoices):
         genuine = "Genuine", "Genuine"

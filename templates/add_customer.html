@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/zebra_datepicker.css' %}" type="text/css">
+
 {% endblock extra_css %}
 {% block content %}
 <div class="main-content">
@@ -133,6 +135,9 @@
   
           // update form count
           $('#id_images-TOTAL_FORMS').attr('value', count+1);
+          $('.purchase_date').Zebra_DatePicker({
+            format: 'd/m/Y'
+        });
       });
       $(document).on("click",'.remove-machine',function(){
             var whichtr = $(this).closest("tr");
@@ -142,5 +147,19 @@
   });
 
  
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/zebra_pin@2.0.0/dist/zebra_pin.min.js"></script>
+        <script src="{% static 'assets/js/zebra_datepicker.min.js' %}"></script>
+        {% comment %} <script src="{% static 'assets/js/example_date.js' %}"></script> {% endcomment %}
+
+<script>
+  $(document).ready(function() {
+    $('.purchase_date').Zebra_DatePicker({
+        format: 'd/m/Y'
+    });
+
+   
+  });
 </script>
 {% endblock extra_script %}
