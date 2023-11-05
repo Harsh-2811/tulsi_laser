@@ -66,7 +66,7 @@ class DeleteMachineType(DeleteView):
         success_url = self.get_success_url()
         self.object.delete()
 
-        messages.success(self.request, "Technician was deleted successfully.")
+        messages.success(self.request, "Machine Type was deleted successfully.")
         return HttpResponseRedirect(success_url)
 
  
