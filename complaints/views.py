@@ -29,6 +29,7 @@ class Complaints(CreateView, FilterView):
     context_object_name = "complaints"
     success_url = reverse_lazy('complaints')
     filterset_class = ComplaintFilter
+    model = Complain
     queryset = Complain.objects.all().order_by('-created_at').exclude(status = Complain.Statuses.completed)
 
     def get_context_data(self, **kwargs):
