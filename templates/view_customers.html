@@ -53,7 +53,7 @@
       { 
         name: 'total_machine',
         hidden: true
-      }, "Email" ,"Company Name", "Manager", "Company No", "Manager No", "Created Date", {
+      }, "Email" ,"Company Name", "Company No.", "Manager", "Manager No.", "Accountant Name", "Accountant No." "Created Date", {
         name: "Machines",
         width: "100px",
         formatter: function (e, row) {
@@ -86,9 +86,14 @@
             "{{ customer.user.email }}",
 
             "{{ customer.company_name }}",
-            "{{ customer.manager_name }}",
             "{{ customer.company_mobile_no }}",
+
+            "{{ customer.manager_name }}",
             "{{ customer.manager_mobile_no }}",
+
+
+            "{{ customer.accountant_name }}",
+            "{{ customer.accountant_mobile_no }}",
            
             
             "{{ customer.created_at|date:'M d, Y' }}",

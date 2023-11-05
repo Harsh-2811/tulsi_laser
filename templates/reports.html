@@ -308,7 +308,7 @@
         columns: [ { 
             name: 'id',
             hidden: true
-        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Created Date", {
+        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty", "Created Date", {
             name: "History",
             width: "100px",
             formatter: function (e, row) {
@@ -332,7 +332,7 @@
                 "{{ machine.customer.company_mobile_no }}",
                 "{{ machine.purchase_date|date:'M d, Y' }}",
                 "{{ machine.get_warranty_display}}",
-                "{{ machine.duration}}",
+               
              
 
                 "{{ machine.created_at|date:'M d, Y' }}",

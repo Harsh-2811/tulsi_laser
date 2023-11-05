@@ -228,7 +228,7 @@
         columns: [ { 
             name: 'id',
             hidden: true
-        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Warranty Ends this Month", "Total Complaints", {
+        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty", "Warranty Ends this Month", "Total Complaints", {
             name: "Check Complaints",
             width: "100px",
             formatter: function (e, row) {
@@ -252,7 +252,7 @@
                 "{{ machine.customer.company_mobile_no }}",
                 "{{ machine.purchase_date|date:'M d, Y' }}",
                 "{{ machine.get_warranty_display}}",
-                "{{ machine.duration}}",
+               
                 "{{ machine.warranty_ends_this_month }}",
     
                 "{{ machine.total_complaints}}",
