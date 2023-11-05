@@ -6,7 +6,7 @@ from users.models import Technician, APKs
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets  + (
-            (None, {'fields': ('role',)}),
+            (None, {'fields': ('role','push_token')}),
     )
 
 
