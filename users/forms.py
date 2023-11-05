@@ -1,13 +1,14 @@
 from typing import Any
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate
 from users.models import *
 class TechnicianForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
     name = forms.CharField(widget=forms.TextInput())
     class Meta:
         model = Technician
-        fields = ("email", "name", "phone_1", "phone_2", "expertise", "address")
+        fields = ("email", "name", "phone_1", "phone_2", "expertise", "address", "app_access", "web_access")
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -15,6 +16,9 @@ class TechnicianForm(forms.ModelForm):
 
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+            if isinstance(visible.field.widget, forms.CheckboxInput):
+                visible.field.widget.attrs['class'] = 'form-check-input'
+                visible.field.widget.attrs['data_type'] = 'checkbox'
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -30,3 +34,21 @@ class CustomAuthenticationForm(AuthenticationForm):
         super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+    
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if User.objects.filter(username = username).exists():
+            user = User.objects.get(username = username)
+            if not user.is_superuser:
+                if Technician.objects.filter(user = user).exists():
+                    tech = Technician.objects.get(user = user)
+                    if not tech.web_access:
+                        raise forms.ValidationError("You not have permission for this platform")
+                    self.user_cache = authenticate(username=username, password=password)
+                else:
+                    raise forms.ValidationError("You not have permission for this platform")
+            else:
+                self.user_cache = authenticate(username=username, password=password)
+        return self.cleaned_data

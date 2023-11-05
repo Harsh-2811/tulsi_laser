@@ -250,7 +250,9 @@ def getComplaintOutcomeByMachine(request):
 def checkIfLimitOver(request):
     mid = request.GET['machine_id']
     machine = Machine.objects.get(id = mid)
-    if Complain.objects.filter(machine = machine).count() > machine.complain_limit:
+    current_month = timezone.now().month
+    current_year = timezone.now().year
+    if Complain.objects.filter(machine = machine, date__month = current_month, date__year = current_year).count() > machine.complain_limit:
         return JsonResponse({"limit_over": True})
     else:
         return JsonResponse({"limit_over": False})

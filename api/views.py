@@ -36,6 +36,9 @@ class UserLogin(GenericAPIView):
         if not user.check_password(password):
             return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
 
+        if not user.technician.app_access:
+            return Response({'error': 'You do not have permission to log in.'}, status=status.HTTP_403_FORBIDDEN)
+        
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
@@ -147,6 +150,6 @@ class SaveFCMToken(GenericAPIView):
         if 'fcm_token' in data:
             user.push_token = data['fcm_token']
             user.save()
-            return Response({'type':'success','message':'Token has been saved for this user'}, status=HTTP_200_OK)
+            return Response({'type':'success','message':'Token has been saved for this user'}, status=status.HTTP_200_OK)
         else:
             return Response({'type':'error','message':'Not valid Payload'}, status=status.HTTP_200_OK)

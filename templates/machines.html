@@ -10,8 +10,8 @@
                 <div class="col-xxl-12 col-md-12">
                     <div class="card">
                         <div class="card-header align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Machines</h4>
-
+                            <h4 class="card-title mb-0 flex-grow-1">{% if apks %}APKS{% elif machines %}Machines{% endif %}</h4>
+                            {% if machines %}
                             <form action="" method="post">{% csrf_token %}
                                 <div class="row row-cols-lg-auto g-3 align-items-center">
 
@@ -35,7 +35,7 @@
                                     </div><!--end col-->
                                 </div><!--end row-->
                             </form>
-
+                            {% endif %}
                             {% if statuses %}
                             <div class="flex-shrink-0 ">
                               <select class="form-select form-select-sm" id="type_filter" aria-label=".form-select-sm example">
@@ -69,7 +69,40 @@
 <script src="{% static 'assets/libs/gridjs/gridjs.umd.js' %}"></script>
 
 <script>
-  
+    {% if apks %}
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+    columns: [ { 
+        name: 'id',
+        hidden: true
+    },{ 
+        name: 'apk_url',
+        hidden: true
+    },{
+        name: "APK",
+        width: "100px",
+        formatter: function (e, row) {
+          return gridjs.html(
+            `<a href="${row.cells[1].data}">Download Application</a>`
+          );
+        },
+      },"Changes","Created At"
+    ],
+    pagination: { limit: 5 },
+    search: !0,
+    data: [
+        {% for apk in apks %}
+            [
+            "{{ apk.id }}",
+            "{{ apk.apk.url }}",
+            "",
+            "{{ apk.changes }}",
+            "{{ apk.created_at|date:'M d, Y' }}"
+            ],
+        {% endfor %}
+    ],
+    }).render(document.getElementById("table-search"))
+    {% elif machines %}
     document.getElementById("table-search") &&
         new gridjs.Grid({
         columns: [ { 
@@ -110,6 +143,6 @@
             {% endfor %}
         ],
         }).render(document.getElementById("table-search"))
-    
+    {% endif %}
 </script>
 {% endblock extra_script %}

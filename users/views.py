@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, FileResponse
 from django.urls import reverse_lazy
 from users.forms import TechnicianForm
-from users.models import User, Technician
+from users.models import User, Technician, APKs
 from django.views.generic import CreateView, UpdateView, TemplateView, View, ListView, DeleteView
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -120,3 +120,12 @@ class DeleteTechnician(DeleteView):
         self.object.user.delete()
         messages.success(self.request, "Technician was deleted successfully.")
         return HttpResponseRedirect(success_url)
+    
+class APKListing(TemplateView):
+    template_name = "machines.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["apks"] =  APKs.objects.all().order_by('-created_at')
+        return context
+
