@@ -55,13 +55,13 @@ class Technicians(CreateView, ListView):
     
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form_title"] = "Add Technician" 
-        context["table_title"] = "Technicians" 
-        context["show_lists"] = True
 
-        return context
-    
+        kwargs['object_list'] = Technician.objects.all().order_by('-created_at')
+        kwargs["form_title"] = "Add Technician" 
+        kwargs["table_title"] = "Technicians" 
+        kwargs["show_lists"] = True
+        return super(Technicians, self).get_context_data(**kwargs)
+
     def form_valid(self, form):
         username = self.request.POST['email']
         name = self.request.POST['name']
