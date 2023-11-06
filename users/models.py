@@ -20,7 +20,7 @@ class Technician(models.Model):
     phone_1 = PhoneNumberField(unique=True)
     phone_2 = PhoneNumberField(null=True, blank=True, unique=True)
     expertise = models.CharField(max_length=265, null=True, blank=True)
-    address = models.TextField()
+    address = models.TextField(null=True, blank=True)
     app_access = models.BooleanField(default=True)
     web_access = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
