@@ -22,8 +22,12 @@ class MachineTypes(CreateView, ListView):
     context_object_name = "machine_types"
     success_url = reverse_lazy('machine_types')
     queryset = MachineType.objects.all().order_by('-created_at')
+    model = MachineType
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Add Machine Type" 
         context["single_field"] = True
@@ -40,8 +44,12 @@ class EdiMachineType(UpdateView):
     template_name = "add_data_form.html"
     success_url = reverse_lazy('machine_types')
     queryset = MachineType.objects.all().order_by('-created_at')
+    model = MachineType
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Update Machine Type" 
         return context
@@ -58,6 +66,7 @@ class DeleteMachineType(DeleteView):
     template_name = "delete_confirm.html"
     
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
         context["list_url"] =  reverse_lazy('machine_types')
         return context
@@ -106,8 +115,12 @@ class Customers(ListView):
     queryset = Customer.objects.all()
     context_object_name = "customers"
     form_class = CustomerForm
+    model = Customer
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["table_title"] = "Customers" 
         return context

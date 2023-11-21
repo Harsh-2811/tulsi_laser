@@ -76,8 +76,12 @@ class EdiTechnician(UpdateView):
     template_name = "add_data_form.html"
     success_url = reverse_lazy('technicians')
     queryset = Technician.objects.all().order_by('-created_at')
+    model = Technician
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Update Technician" 
         return context

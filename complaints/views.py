@@ -89,8 +89,12 @@ class EditComplain(UpdateView):
     template_name = "add_data_form.html"
     success_url = reverse_lazy('complaints')
     queryset = Complain.objects.all().order_by('-created_at')
+    model = Complain
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Update Complaint" 
         return context
@@ -112,6 +116,9 @@ class DeleteComplain(DeleteView):
     template_name = "delete_confirm.html"
     
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["list_url"] =  reverse_lazy('complaints')
         return context
@@ -133,8 +140,12 @@ class Payments(CreateView, ListView):
     context_object_name = "payments"
     success_url = reverse_lazy('payments')
     queryset = Payment.objects.all().order_by('-created_at')
+    model = Payment
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Add Payment" 
         context["table_title"] = "Payments" 
@@ -150,8 +161,11 @@ class EditPayment(UpdateView):
     template_name = "add_data_form.html"
     success_url = reverse_lazy('payments')
     queryset = Payment.objects.all().order_by('-created_at')
-
+    model = Payment
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Update Payment" 
         return context
@@ -168,6 +182,9 @@ class DeletePayment(DeleteView):
     template_name = "delete_confirm.html"
     
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["list_url"] =  reverse_lazy('payments')
         return context
@@ -190,6 +207,9 @@ class Services(CreateView, FilterView):
     queryset = Service.objects.all().order_by('-created_at').exclude(status = Service.Statuses.completed)
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Add Service" 
         context["table_title"] = "Services" 
@@ -208,8 +228,12 @@ class EditService(UpdateView):
     template_name = "add_data_form.html"
     success_url = reverse_lazy('services')
     queryset = Service.objects.all().order_by('-created_at')
+    model = Service
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Update Service" 
         return context
@@ -231,6 +255,9 @@ class DeleteService(DeleteView):
     template_name = "delete_confirm.html"
     
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
         context["list_url"] =  reverse_lazy('services')
         return context
