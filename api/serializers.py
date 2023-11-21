@@ -23,15 +23,20 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
 class MachineSerializer(serializers.ModelSerializer):
+    machine_type = serializers.SlugRelatedField(slug_field='_type', read_only = True)
     class Meta:
         model = Machine
         fields = '__all__'
 
 
 class TechnicianSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField(read_only = True)
     class Meta:
         model = Technician
         fields = '__all__'
+
+    def get_name(self, instance):
+        return instance.user.first_name
 
 
 class ComplainSerializer(serializers.ModelSerializer):
@@ -50,16 +55,16 @@ class ComplainOutcomeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplainOutcome
-        # fields = '__all__'
-        exclude = ['created_at', 'updated_at']
+        fields = '__all__'
+        # exclude = ['created_at', 'updated_at']
 
 
 class ComplainOutcomeCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplainOutcome
-        # fields = '__all__'
-        exclude = ['created_at', 'updated_at']
+        fields = '__all__'
+        # exclude = ['created_at', 'updated_at']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -78,3 +83,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         if data['new_password'] != data['confirm_password']:
             raise serializers.ValidationError("New passwords do not match.")
         return data
+    
+class FCMSerializer(serializers.Serializer):
+    fcm_token = serializers.CharField(required=True)

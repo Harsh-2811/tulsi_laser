@@ -1,0 +1,65 @@
+<!-- Default Modals -->
+
+{% if outcomes %}
+<button type="button" class="btn btn-secondary " data-bs-toggle="modal" data-bs-target="#myModal">See History</button>
+<div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Machine History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+            </div>
+            <div class="modal-body">
+                {% for outcome in outcomes %}
+                    <h5 class="fs-15">
+                        Issue : {{ outcome.complain.issue }} on  {{ outcome.complain.updated_at|date:"d, M Y" }}
+                    </h5>
+                    
+                    <p class="text-muted">Resolved By : {{outcome.complain.technician.user.first_name}}</p>
+                    <p class="text-muted">Remark : {{outcome.remark}}</p>
+                    <p class="text-muted">Water Filter : {% if outcome.water_filter %}<i class="mdi mdi-check-circle" style="color:green"></i>{% else %}<i class="mdi mdi-close-circle" style="color:red"></i>{% endif %}</p>
+                    <p class="text-muted">Alignment : {% if outcome.alignment %}<i class="mdi mdi-check-circle" style="color:green"></i>{% else %}<i class="mdi mdi-close-circle" style="color:red"></i>{% endif %}</p>
+                    {% if outcome.alignment %}<p class="text-muted">Ampere: {{ outcome.ampere }}, Watt: {{ outcome.watt }}, Voltage: {{ outcome.voltage }}, Temprature: {{ outcome.temp }}</p>{% endif %}
+                    <hr/>
+                    {% comment %} <p class="text-muted">Alignment : {{ }}</p> {% endcomment %}
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                {% comment %} <button type="button" class="btn btn-primary ">Save Changes</button> {% endcomment %}
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% elif services %}
+<button type="button" class="btn btn-secondary " data-bs-toggle="modal" data-bs-target="#myModal">See History</button>
+<div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Machine Service History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+            </div>
+            <div class="modal-body">
+                {% for service in services %}
+                    <h5 class="fs-15">
+                        In Serial No : {{ service.in_serial_no }} and Out Serial No : {{ service.out_serial_no }}
+                    </h5>
+            
+                    <p class="text-muted">Created Date : {{ service.created_at|date:"M, d Y" }} </p>
+                    <p class="text-muted">Issued By : {{ service.technician }} </p>
+                    <p class="text-muted">Completed By : {{ service.completed_by }} </p>
+                    <p class="text-muted">Completed Date : {{ service.completed_date|date:"M, d Y" }} </p>
+
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                {% comment %} <button type="button" class="btn btn-primary ">Save Changes</button> {% endcomment %}
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endif %}

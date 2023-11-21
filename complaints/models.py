@@ -55,8 +55,16 @@ class Service(models.Model):
     in_serial_no = models.CharField(max_length=265)
     out_serial_no = models.CharField(max_length=265)
     status = models.IntegerField(choices=Statuses.choices, default=Statuses.active)
+
+    completed_date = models.DateField(null=True, blank=True)
+    completed_by = models.ForeignKey(Technician, on_delete=models.SET_NULL, null=True, blank=True, related_name="service_solutions")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.service_details
+    
 
 class ComplainOutcome(models.Model):
     class Complaint_types(models.TextChoices):

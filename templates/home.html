@@ -172,10 +172,43 @@
                 </div><!-- end col -->
             </div><!-- end row -->
 
-         
+            <div class="row">
+                <div class="col-xxl-6">
+                    <div class="card">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">Warranty Check</h4>
+                            
+                        </div><!-- end card header -->
+                        <div class="card-body pt-0">
+                            <ul class="list-group list-group-flush border-dashed">
+                                {% for machine in ending_months %}
+                                <li class="list-group-item ps-0">
+                                    <div class="row align-items-center g-3">
+                                        <div class="col-auto">
+                                            <div class="avatar-sm p-1 py-2 h-auto bg-light rounded-3 shadow">
+                                                <div class="text-center">
+                                                    <h5 class="mb-0">{{ machine.warranty_end_date|date:'d' }}</h5>
+                                                    <div class="text-muted">{{ machine.warranty_end_date|date:'D' }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="text-muted mt-0 mb-1 fs-13">{{ machine.warranty_end_date|date:'M Y' }}</h5>
+                                            <a href="#" class="text-reset fs-14 mb-0"><span style="font-weight:bold">Company:</span> {{ machine.customer.company_name }} <span style="font-weight:bold">Mobile No:</span> {{ machine.customer.company_mobile_no }} <span style="font-weight:bold">Machine:</span> {{ machine.code }}</a>
+                                        </div>
+                                        
+                                    </div>
+                                    <!-- end row -->
+                                </li>
+                                {% endfor %}
+                            </ul><!-- end -->
+                            
+                        </div><!-- end card body -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
 
-          
-
+                
+            </div>
         </div>
         <!-- container-fluid -->
     </div>
@@ -195,7 +228,7 @@
         columns: [ { 
             name: 'id',
             hidden: true
-        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Warranty Ends this Month", "Total Complaints", {
+        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty", "Warranty Ends this Month", "Total Complaints", {
             name: "Check Complaints",
             width: "100px",
             formatter: function (e, row) {
@@ -219,7 +252,7 @@
                 "{{ machine.customer.company_mobile_no }}",
                 "{{ machine.purchase_date|date:'M d, Y' }}",
                 "{{ machine.get_warranty_display}}",
-                "{{ machine.duration}}",
+               
                 "{{ machine.warranty_ends_this_month }}",
     
                 "{{ machine.total_complaints}}",

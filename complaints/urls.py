@@ -1,9 +1,15 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 
-from .views import Complaints, getCompanyByMachine, getMachinesByCustomer, getAddressByCustomer, checkIfComplainExistForDay, EditComplain, DeleteComplain, Payments, EditPayment, DeletePayment, Services, EditService, DeleteService
+from .views import Complaints, getCompanyByMachine, getMachinesByCustomer, getAddressByCustomer, checkIfComplainExistForDay, EditComplain, DeleteComplain, Payments, EditPayment, DeletePayment, Services, EditService, DeleteService, getComplaintOutcomeByMachine, checkIfLimitOver
 urlpatterns = [
     path("complaints/",login_required(Complaints.as_view()), name="complaints"),
+
+
+    path("getComplaintOutcomeByMachine/",login_required(getComplaintOutcomeByMachine), name="getComplaintOutcomeByMachine"),
+    path("checkIfLimitOver/",login_required(checkIfLimitOver), name="checkIfLimitOver"),
+
+
     path("getCompanyByMachine/", login_required(getCompanyByMachine), name="getCompanyByMachine"),
     path("getMachinesByCustomer/", login_required(getMachinesByCustomer), name="getMachinesByCustomer"),
     path("getAddressByCustomer/", login_required(getAddressByCustomer), name="getAddressByCustomer"),

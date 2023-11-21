@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.contrib import messages
-from .models import Complain, Payment, Service
+from .models import Complain, Payment, Service, ComplainOutcome
 from django.http import HttpResponseRedirect, JsonResponse
 from customers.models import Machine, Customer
-from complaints.forms import ComplainForm, PaymentForm, ServiceForm
+from complaints.forms import ComplainForm, PaymentForm, ServiceForm, ServiceFormCreate
 from django.utils import timezone
 # Create your views here.
 
@@ -29,9 +29,14 @@ class Complaints(CreateView, FilterView):
     context_object_name = "complaints"
     success_url = reverse_lazy('complaints')
     filterset_class = ComplaintFilter
+    model = Complain
     queryset = Complain.objects.all().order_by('-created_at').exclude(status = Complain.Statuses.completed)
 
     def get_context_data(self, **kwargs):
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
+
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Add Complaint" 
         context["table_title"] = "Complaints" 
@@ -46,6 +51,15 @@ class Complaints(CreateView, FilterView):
             obj.status = Complain.Statuses.pending
         else:
             obj.status = Complain.Statuses.new
+
+        from pyfcm import FCMNotification
+        from django.conf import settings
+
+        push_service = FCMNotification(api_key=settings.FCM_TOKEN)
+        try:
+            result = push_service.notify_single_device(registration_id=obj.technician.user.push_token, message_title="New Complain assigned to you.", message_body=f"Complain for machine {obj.machine.code} of {obj.customer.company_name}")
+        except:
+            pass
         messages.success(self.request, "Complaint Generated successfully!!!")
         
         return super().form_valid(form)
@@ -167,12 +181,13 @@ class DeletePayment(DeleteView):
     
 
 class Services(CreateView, FilterView):
-    form_class = ServiceForm
+    form_class = ServiceFormCreate
     template_name = "add_data_form.html"
     context_object_name = "services"
     success_url = reverse_lazy('services')
     filterset_class = ServiceFilter
-    queryset = Service.objects.all().order_by('-created_at')
+    model = Service
+    queryset = Service.objects.all().order_by('-created_at').exclude(status = Service.Statuses.completed)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -200,6 +215,11 @@ class EditService(UpdateView):
         return context
 
     def form_valid(self, form):
+        service = form.save(commit=False)
+        if service.completed_date and service.completed_by:
+            service.status = Service.Statuses.completed # Change 'new_status' to your desired status
+            service.save()
+
         messages.success(self.request, "Service Updated successfully!!!")
         return super().form_valid(form)
 
@@ -222,3 +242,23 @@ class DeleteService(DeleteView):
         messages.success(self.request, "Service was deleted successfully.")
         return HttpResponseRedirect(success_url)
     
+
+def getComplaintOutcomeByMachine(request):
+    mid = request.GET['machine_id']
+    request_for = request.GET['request_for']
+    if request_for == "outcomes":
+        outcomes = ComplainOutcome.objects.filter(complain__machine_id = mid).select_related('complain')[:5]
+        return render(request, "complain_history.html", {"outcomes":outcomes})
+    elif request_for == "services":
+        services = Service.objects.filter(machine_id = mid)[:5]
+        return render(request, "complain_history.html", {"services":services})
+    
+def checkIfLimitOver(request):
+    mid = request.GET['machine_id']
+    machine = Machine.objects.get(id = mid)
+    current_month = timezone.now().month
+    current_year = timezone.now().year
+    if Complain.objects.filter(machine = machine, date__month = current_month, date__year = current_year).count() > machine.complain_limit:
+        return JsonResponse({"limit_over": True})
+    else:
+        return JsonResponse({"limit_over": False})

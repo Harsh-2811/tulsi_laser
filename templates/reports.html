@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'assets/css/zebra_datepicker.css' %}" type="text/css">
+
 {% endblock extra_css %}
 {% block content %}
 <div class="main-content">
@@ -100,9 +103,94 @@
 </div>
 {% endblock content %}
 {% block extra_script %}
-
-{% if show_lists %}
 <script src="{% static 'assets/libs/gridjs/gridjs.umd.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+<script>
+  $(document).ready(function(){
+   
+      $("#id_machine").select2();
+      $("#id_customer").select2();
+      $("#id_technician").select2();
+
+
+   
+  })
+</script>
+<script>
+    var machine_id
+    $("#id_customer").change(function () {
+      var url = "{% url 'getMachinesByCustomer' %}"  // get the url of the `load_cities` view
+      var customer_id = $(this).select2('data')[0]['id'];  // get the selected country ID from the HTML input
+      machine_id = $("#id_machine").select2('data')[0]['id'];
+
+     if(!machine_id){
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'customer_id': customer_id       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_machine").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+    }
+    
+  
+      
+    });
+  
+    $("#id_machine").change(function () {
+   
+      var url = "{% url 'getComplaintOutcomeByMachine' %}"  // get the url of the `load_cities` view
+      machine_id = $(this).select2('data')[0]['id'];  // get the selected country ID from the HTML input
+      var customer_id = $("#id_customer").select2('data')[0]['id'];
+      
+      var request_for = "outcomes"
+  
+      if(!customer_id){
+        $.ajax({                       // initialize an AJAX request
+          url: "{% url 'getCompanyByMachine' %}",                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          data: {
+            'machine_id': machine_id       // add the country id to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#id_customer").html(data);  
+            var firstNonEmptyOption = $("#id_customer option[value!='']:first");
+            if (firstNonEmptyOption.length > 0) {
+              firstNonEmptyOption.prop('selected', true);
+            }
+            $("#id_customer").trigger("change")
+  
+            //---------------------
+            var s_customer_id = $("#id_customer").select2('data')[0]['id'];
+            $.ajax({                       // initialize an AJAX request
+              url: "{% url 'getMachinesByCustomer' %}",                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+              data: {
+                'customer_id': s_customer_id       // add the country id to the GET parameters
+              },
+              success: function (data) {   
+                $("#id_machine").html(data); 
+                var selectedMachineId = $(`#id_machine option[value='${machine_id}']`);
+                if (selectedMachineId.length > 0) {
+                  selectedMachineId.prop('selected', true);
+                }
+              }
+            });
+          }
+        });
+      }
+  })
+    const dropdown = document.getElementById("type_filter");
+  
+  dropdown.addEventListener("change", function() {
+    $("#type_value").val($(this).val())
+    document.getElementById("reportFrom").submit();
+  });
+  </script>
+{% if show_lists %}
+
 <script>
     {% if complaint_outcomes %}
 
@@ -132,6 +220,9 @@
         },
         { 
             name: 'voltage',
+            hidden: true
+        },{ 
+            name: 'watt',
             hidden: true
         },"Company Name", "Company Mobile No",{
             name: "Complain Type",
@@ -166,15 +257,16 @@
             }, {
                 name: "Alignment",
                 formatter: function (e, row) {
-                    if (row.cells[3].data == "True"){
+                    if (row.cells[3].data == "False"){
                        return gridjs.html(
-                           '<i class="mdi mdi-check-circle" style="color:green"></i>'
+                           '<i class="mdi mdi-close-circle" style="color:red"></i>'
                          );
-                    }else if(row.cells[3].data == "False"){
+                    }else if(row.cells[3].data == "True"){
                        return gridjs.html(
                            `<h5><span class="badge border border-secondary text-secondary" style="width:150px">Ampere : ${row.cells[4].data}
                            <br/> Temprature : ${row.cells[5].data}
-                           <br/> Voltage : ${row.cells[6].data} </span></h5>`
+                           <br/> Voltage : ${row.cells[6].data}
+                           <br/> Watt : ${row.cells[7].data} </span></h5>`
        
                          );
                     }
@@ -194,7 +286,7 @@
                 "{{ outcome.ampere }}",
                 "{{ outcome.temp }}",
                 "{{ outcome.voltage }}",
-
+                "{{ outcome.watt }}",
 
                 "{{ outcome.complain.customer.company_name }}",
                 "{{ outcome.complain.customer.company_mobile_no }}",
@@ -216,7 +308,7 @@
         columns: [ { 
             name: 'id',
             hidden: true
-        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty","Duration", "Created Date", {
+        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty", "Created Date", {
             name: "History",
             width: "100px",
             formatter: function (e, row) {
@@ -240,7 +332,7 @@
                 "{{ machine.customer.company_mobile_no }}",
                 "{{ machine.purchase_date|date:'M d, Y' }}",
                 "{{ machine.get_warranty_display}}",
-                "{{ machine.duration}}",
+               
              
 
                 "{{ machine.created_at|date:'M d, Y' }}",
@@ -260,16 +352,7 @@
       "Date",
       "Amount",
       "Created Date",
-      {
-        name: "Actions",
-        width: "100px",
-        formatter: function (e, row) {
-          return gridjs.html(
-            `<a href='/complaints/payments/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
-            <a href="/complaints/payments/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
-          );
-        },
-      },
+     
     ],
       pagination: { limit: 5 },
       search: !0,
@@ -288,35 +371,78 @@
         {% endfor %}
       ],
     }).render(document.getElementById("table-search"))
+
+    {% elif services %}
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+      columns: [ { 
+        name: 'id',
+        hidden: true
+      },
+      { 
+        name: 'Status',
+        hidden: true
+      },
+      "Date",
+      "Machine",
+      "Company",
+      "Technician",
+      "Service",
+      "In Serial No",
+      "Out Serial No",
+
+
+  
+      "Created Date",
+      "Completed By ",
+      "Completed At ",
+
+
+      
+    ],
+      pagination: { limit: 5 },
+      search: !0,
+      data: [
+        {% for service in services %}
+            [
+            "{{ service.id }}",
+            "{{ service.status }}",
+
+            "{{ service.date|date:'M d, Y' }}",
+            "{{ service.machine.code }}",
+            "{{ service.customer.company_name }}",
+            "{{ service.technician.user.first_name }}",
+            "{{ service.service_details }}",
+            "{{ service.in_serial_no }}",
+            "{{ service.out_serial_no }}",
+            "{{ service.created_at|date:'M d, Y' }}",
+            "{{ service.completed_by }}",
+            "{{ service.completed_date|date:'M d, Y' }}",
+
+
+
+            ],
+        {% endfor %}
+      ],
+    }).render(document.getElementById("table-search"))
     {% endif %}
 </script>
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+{% endif %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/zebra_pin@2.0.0/dist/zebra_pin.min.js"></script>
+        <script src="{% static 'assets/js/zebra_datepicker.min.js' %}"></script>
+        {% comment %} <script src="{% static 'assets/js/example_date.js' %}"></script> {% endcomment %}
 
 <script>
-  $("#id_customer").change(function () {
-    var url = "{% url 'getMachinesByCustomer' %}"  // get the url of the `load_cities` view
-    var customer_id = $(this).val();  // get the selected country ID from the HTML input
-
-    $.ajax({                       // initialize an AJAX request
-      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
-      data: {
-        'customer_id': customer_id       // add the country id to the GET parameters
-      },
-      success: function (data) {   // `data` is the return of the `load_cities` view function
-        $("#id_machine").html(data);  // replace the contents of the city input with the data that came from the server
-      }
+ 
+  $(document).ready(function() {
+    $('#id_start_date').Zebra_DatePicker({
+        format: 'd/m/Y'
     });
-
-    
+    $('#id_end_date').Zebra_DatePicker({
+      format: 'd/m/Y'
   });
-
-
-  const dropdown = document.getElementById("type_filter");
-
-dropdown.addEventListener("change", function() {
-  $("#type_value").val($(this).val())
-  document.getElementById("reportFrom").submit();
-});
+  });
 </script>
-{% endif %}
 {% endblock extra_script %}

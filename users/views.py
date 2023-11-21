@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, FileResponse
 from django.urls import reverse_lazy
 from users.forms import TechnicianForm
-from users.models import User, Technician
+from users.models import User, Technician, APKs
 from django.views.generic import CreateView, UpdateView, TemplateView, View, ListView, DeleteView
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -10,7 +10,7 @@ from customers.models import Customer, Machine, MachineType
 from complaints.models import Complain
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
+from datetime import datetime, timedelta
 # Create your views here.
 
 @login_required()
@@ -22,6 +22,17 @@ def home(request):
     this_month_complaints = Complain.objects.filter(date__month=timezone.now().date().month).count()
     machine_types = MachineType.objects.count()
     complaints = Complain.objects.filter(date=timezone.now().date()).order_by('-created_at')
+
+    current_month = datetime.today().month
+    prev_month = (datetime.today() - timedelta(days=30)).month
+    current_year = datetime.today().year
+
+    ending_months = Machine.objects.filter(
+                              warranty_end_date__year__gte=current_year,
+                              warranty_end_date__month__gte=prev_month,
+                              warranty_end_date__year__lte=current_year,
+                              warranty_end_date__month__lte=current_month)
+    print(ending_months)
     if 'status' in request.GET:
         if request.GET['status'] != "0":
             complaints = complaints.filter(status = request.GET['status'])
@@ -33,7 +44,7 @@ def home(request):
         to_date = request.POST['to_date']
         total_machines = total_machines.filter(purchase_date__range = (from_date, to_date))
 
-    return render(request, 'home.html',{"total_customers":total_customers, "total_machines":total_machines, "todays_complaints":todays_complaints, "this_month_complaints":this_month_complaints, "machine_types":machine_types, "complaints":complaints, "complaint_statuses":complaint_statuses, "from_date":from_date, "to_date":to_date})
+    return render(request, 'home.html',{"total_customers":total_customers, "total_machines":total_machines, "todays_complaints":todays_complaints, "this_month_complaints":this_month_complaints, "machine_types":machine_types, "complaints":complaints, "complaint_statuses":complaint_statuses, "from_date":from_date, "to_date":to_date, "ending_months": ending_months})
 
 class Technicians(CreateView, ListView):
     form_class = TechnicianForm
@@ -44,16 +55,13 @@ class Technicians(CreateView, ListView):
     
 
     def get_context_data(self, **kwargs):
-        queryset = kwargs.pop('object_list', None)
-        if queryset is None:
-            self.object_list = self.queryset
-        context = super().get_context_data(**kwargs)
-        context["form_title"] = "Add Technician" 
-        context["table_title"] = "Technicians" 
-        context["show_lists"] = True
 
-        return context
-    
+        kwargs['object_list'] = Technician.objects.all().order_by('-created_at')
+        kwargs["form_title"] = "Add Technician" 
+        kwargs["table_title"] = "Technicians" 
+        kwargs["show_lists"] = True
+        return super(Technicians, self).get_context_data(**kwargs)
+
     def form_valid(self, form):
         username = self.request.POST['email']
         name = self.request.POST['name']
@@ -109,4 +117,12 @@ class DeleteTechnician(DeleteView):
         self.object.user.delete()
         messages.success(self.request, "Technician was deleted successfully.")
         return HttpResponseRedirect(success_url)
+    
+class APKListing(TemplateView):
+    template_name = "machines.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["apks"] =  APKs.objects.all().order_by('-created_at')
+        return context
 

@@ -20,7 +20,7 @@ class ComplainForm(forms.ModelForm):
         model = Complain
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            # 'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
       
         }
     
@@ -40,7 +40,7 @@ class PaymentForm(forms.ModelForm):
         model = Payment
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
+            # 'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
             # 'end_date': forms.DateInput( attrs={'class':'form-control', 'type':'date'}),
             # 'customer': ForeignKeyDatalistWidget(queryset=Customer.objects.all())
         }
@@ -48,7 +48,6 @@ class PaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.fields['date'].initial = timezone.now().date()
-
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
                 visible.field.widget.attrs['class'] = 'form-select'
@@ -61,9 +60,10 @@ class ServiceForm(forms.ModelForm):
         model = Service
         fields = "__all__"
         widgets = {
-            'date': forms.DateInput( attrs={'class':'form-control', 'type':'date'})
+            # 'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
+            # 'completed_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'input_formats': ['%d/%m/%Y']}),
         }
-    
+        
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.fields.pop('status')
@@ -74,3 +74,10 @@ class ServiceForm(forms.ModelForm):
                 visible.field.widget.attrs['class'] = 'form-select'
             else:
                 visible.field.widget.attrs['class'] = 'form-control'
+
+class ServiceFormCreate(ServiceForm):
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields.pop('completed_date')
+        self.fields.pop('completed_by')

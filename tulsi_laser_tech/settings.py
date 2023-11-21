@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'tulsi_laser_tech.urls'
@@ -92,7 +93,26 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'tulsi_laser',
+#         'USER': 'svlaser',
+#         'PASSWORD': 'Svlaser@502',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'tulsi_laser',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -164,3 +184,6 @@ USE_L10N = False
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = '/users/login/'
 LOGIN_URL = '/users/login/'
+
+DATE_INPUT_FORMATS = ['%d/%m/%Y']
+FCM_TOKEN="AAAAQclp_18:APA91bGC-iQ4oQxAUe6_2yXBXyI23rSvbGynoEaH76crbqpKan0hMnfyLD9N-dXOiQO5ZtKgsdzCbhXF-OOkL6lK7y2jS5hrL-mwgASu-mjz0zd8302i76d-DDRKy41Brh0HO3wSgGly"
