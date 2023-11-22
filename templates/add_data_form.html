@@ -6,6 +6,7 @@
 
 {% endblock extra_css %}
 {% block content %}
+
 <div class="main-content">
 
     <div class="page-content">
@@ -20,6 +21,7 @@
                     </ul>
                 {% endif %}
             {% endif %}
+            {% if user.role == 'admin' or user.is_superuser %}
             <div class="row" style="justify-content:center">
                 <div class="col-xxl-{% if single_field %}6{% else %}12{% endif %}">
                     <div class="card  mt-4">
@@ -29,13 +31,12 @@
                         </div><!-- end card header -->  
 
                         <div class="card-body">
-                         
                             <div class="live-preview">
                                 <form action="" method="post">{% csrf_token %}
                                     <div class="row">
 
                                         {% for field in form %}
-                                            <div class="col-md-{% if single_field %}12{% else %}3{% endif %}">
+                                                                                    <div class="col-md-{% if single_field %}12{% else %}3{% endif %}">
                                                 <!-- Input with Label -->
                                                 <div class="mb-3">
                                                     <label for="{{field.id}}" class="form-label">{{ field.label }}</label>
@@ -88,7 +89,34 @@
                 </div> <!-- end col -->
             </div>
             {% endif %}
+            {% elif user.role == 'technician' %}
+            {% if show_lists %}
 
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ table_title }}</h4>
+                            {% if statuses %}
+                            
+                            <div class="flex-shrink-0 ">                              
+                              <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="location = this.value;">
+                                  {% for status in statuses %}
+                                  <option value="{% if status.0 == 0 %}{{filter_url}}{%else%}{{filter_url}}?status={{status.0}}{%endif%}" {% if request.GET.status|add:'0' == status.0 %}selected{%endif%}>{{status.1}}</option>
+                                  {% endfor%}
+                              </select>                  
+                            </div>
+                            {% endif %}
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div id="table-search"></div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div> <!-- end col -->
+            </div>
+            {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>
@@ -189,6 +217,7 @@
     }).render(document.getElementById("table-search"))
 
     {% elif complaints %}
+    {% if user.role == 'admin' or user.is_superuser %}
     document.getElementById("table-search") &&
     new gridjs.Grid({
       columns: [ { 
@@ -213,21 +242,21 @@
         formatter: function (e, row) {
          if (row.cells[1].data == 1){
             return gridjs.html(
-                '<span class="badge badge-soft-primary">New</span>'
+                '<span class="badge badge-primary">New</span>'
               );
          }else if(row.cells[1].data == 2){
             return gridjs.html(
-                '<span class="badge badge-soft-secondary">Pending</span>'
+                '<span class="badge badge-secondary">Pending</span>'
               );
          }
          else if(row.cells[1].data == 3){
           return gridjs.html(
-              '<span class="badge badge-soft-warning">Running</span>'
+              '<span class="badge badge-warning">Running</span>'
             );
         }
         else if(row.cells[1].data == 4){
           return gridjs.html(
-              '<span class="badge badge-soft-success">Completed</span>'
+              '<span class="badge badge-success">Completed</span>'
             );
          }
           
@@ -292,7 +321,129 @@
       ],
     }).render(document.getElementById("table-search"))
 
+    {% elif user.role == "technician" %}
+    document.getElementById("table-search") &&
+    new gridjs.Grid({
+      
+      columns: [ 
+      {
+        name : "Id",
+        hidden: true
+      },
+      {
+        name: "Actions",
+        width: "100px",
+        formatter: function (e, row) {
+          if(row.cells[2].data == 2){
+            return gridjs.html(
+            `<a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-check mdi-24px'></i></a>
+            <a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-history mdi-24px'></i></a>`
+            
+             );
+          }
+          else if(row.cells[2].data == 3){
+            return gridjs.html(
+            `<a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-check mdi-24px'></i></a>
+            <a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-history mdi-24px'></i></a>`
+             );
+          }
+          else if(row.cells[2].data == 4){
+            return gridjs.html(
+            `<a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-check mdi-24px'></i> Approve</a>`
+             );
+          }
+          
+        },
+      },
+      {
+        name : "Status Hidden",
+        hidden: true
+      },
+      {
+        name : "Repeated Hidden",
+        hidden: true
+      },
+      "Date",
+      "Machine",
+      "Company",
+      "Issue",
+      {
+        name: "Status",
+        formatter: function (e, row) {
+         if (row.cells[2].data == 1){
+            return gridjs.html(
+                '<span class="badge bg-primary">New</span>'
+              );
+         }else if(row.cells[2].data == 2){
+            return gridjs.html(
+                '<span class="badge bg-secondary">Pending</span>'
+              );
+         }
+         else if(row.cells[2].data == 3){
+          return gridjs.html(
+              '<span class="badge bg-warning">Running</span>'
+            );
+        }
+        else if(row.cells[2].data == 4){
+          return gridjs.html(
+              '<span class="badge bg-success">Completed</span>'
+            );
+         }
+          
+        },
+      },"address", {
+        name: "Repeated",
+        width: "100px",
+        formatter: function (e, row) {
+         
+            if(row.cells[2].data == "0" || row.cells[2].data == "1"){
+              return gridjs.html(
+                `
+                <span class="badge border border-primary text-primary">Single Time</span>
+          
+                `
+                );
+             }else{
+              return gridjs.html(
+                `
+                <span class="badge bg-danger ms-1"> ${row.cells[2].data} Times</span>
 
+                `
+                );
+             }
+           
+
+        },
+      }, "Created Date",
+      
+    ],
+      pagination: { limit: 5 },
+      search: !0,
+      data: [
+        {% for complaint in complaints %}
+            [
+            "{{ complaint.id }}",
+            "",
+
+            "{{ complaint.status }}",
+            "{{ complaint.repeated_today }}",
+            "{{ complaint.date|date:'M d, Y' }}",
+            "{{ complaint.machine.code }}",
+            "{{ complaint.customer.company_name }}",
+            "{{ complaint.issue }}",
+            "",
+            "{{ complaint.address|truncatewords:5 }}",
+            "",
+
+            "{{ complaint.created_at|date:'M d, Y' }}",
+
+
+            ],
+        {% endfor %}
+      ],
+    }).render(document.getElementById("table-search"))
+
+    {% endif %}
     {% elif payments %}
     document.getElementById("table-search") &&
     new gridjs.Grid({

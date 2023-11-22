@@ -14,7 +14,7 @@
                     <h5 class="fs-15">
                         Issue : {{ outcome.complain.issue }} on  {{ outcome.complain.updated_at|date:"d, M Y" }}
                     </h5>
-                   
+                    
                     <p class="text-muted">Resolved By : {{outcome.complain.technician.user.first_name}}</p>
                     <p class="text-muted">Remark : {{outcome.remark}}</p>
                     <p class="text-muted">Water Filter : {% if outcome.water_filter %}<i class="mdi mdi-check-circle" style="color:green"></i>{% else %}<i class="mdi mdi-close-circle" style="color:red"></i>{% endif %}</p>
@@ -52,8 +52,6 @@
                     <p class="text-muted">Completed By : {{ service.completed_by }} </p>
                     <p class="text-muted">Completed Date : {{ service.completed_date|date:"M, d Y" }} </p>
 
-
-                    
                 {% endfor %}
             </div>
             <div class="modal-footer">

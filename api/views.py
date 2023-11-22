@@ -26,10 +26,12 @@ class UserLogin(GenericAPIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = User.objects.filter(username=username).first()
-
+        
         if user is None:
             return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
 
+        
+        
         if user.role != 'technician':
             return Response({'error': 'You do not have permission to log in.'}, status=status.HTTP_403_FORBIDDEN)
 

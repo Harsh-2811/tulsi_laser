@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 
-from .views import Complaints, getCompanyByMachine, getMachinesByCustomer, getAddressByCustomer, checkIfComplainExistForDay, EditComplain, DeleteComplain, Payments, EditPayment, DeletePayment, Services, EditService, DeleteService, getComplaintOutcomeByMachine, checkIfLimitOver
+from .views import Complaints, getCompanyByMachine, getMachinesByCustomer, getAddressByCustomer, checkIfComplainExistForDay, EditComplain, DeleteComplain, Payments, EditPayment, DeletePayment, Services, EditService, DeleteService, getComplaintOutcomeByMachine, checkIfLimitOver, updateStatusToRunning
 urlpatterns = [
     path("complaints/",login_required(Complaints.as_view()), name="complaints"),
 
@@ -25,5 +25,6 @@ urlpatterns = [
     path("services/",login_required(Services.as_view()), name="services"),
     path("services/edit/<int:pk>/",login_required(EditService.as_view()),name="edit_services"),
     path("services/delete/<int:pk>/",login_required(DeleteService.as_view()),name="delete_services"),
+    path("updateStatusToRunning/<int:id>/", login_required(updateStatusToRunning), name="updateStatusToRunning")
 
 ]

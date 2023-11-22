@@ -1,7 +1,6 @@
-from django.shortcuts import render
-from django.http import HttpResponse, FileResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from users.forms import TechnicianForm
+from users.forms import TechnicianForm, TechnicianEditForm
 from users.models import User, Technician, APKs
 from django.views.generic import CreateView, UpdateView, TemplateView, View, ListView, DeleteView
 from django.contrib import messages
@@ -16,6 +15,8 @@ from datetime import datetime, timedelta
 @login_required()
 def home(request):
     # Your view logic here
+    if request.user.role == "technician":
+        return redirect("complaints")
     total_customers = Customer.objects.count()
     total_machines = Machine.objects.all()
     todays_complaints = Complain.objects.filter(date=timezone.now().date()).count()
@@ -72,7 +73,7 @@ class Technicians(CreateView, ListView):
 
 
 class EdiTechnician(UpdateView):
-    form_class = TechnicianForm
+    form_class = TechnicianEditForm
     template_name = "add_data_form.html"
     success_url = reverse_lazy('technicians')
     queryset = Technician.objects.all().order_by('-created_at')
@@ -129,4 +130,3 @@ class APKListing(TemplateView):
         context = super().get_context_data(**kwargs)
         context["apks"] =  APKs.objects.all().order_by('-created_at')
         return context
-
