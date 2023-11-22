@@ -6,6 +6,7 @@
 
 {% endblock extra_css %}
 {% block content %}
+
 <div class="main-content">
 
     <div class="page-content">
@@ -20,6 +21,7 @@
                     </ul>
                 {% endif %}
             {% endif %}
+            {% if user.role == 'admin' %}
             <div class="row" style="justify-content:center">
                 <div class="col-xxl-{% if single_field %}6{% else %}12{% endif %}">
                     <div class="card  mt-4">
@@ -29,7 +31,7 @@
                         </div><!-- end card header -->  
 
                         <div class="card-body">
-                         
+                            {{ user.role }}
                             <div class="live-preview">
                                 <form action="" method="post">{% csrf_token %}
                                     <div class="row">
@@ -88,7 +90,34 @@
                 </div> <!-- end col -->
             </div>
             {% endif %}
+            {% elif user.role == 'technician' %}
+            {% if show_lists %}
 
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ table_title }}</h4>
+                            {% if statuses %}
+                            
+                            <div class="flex-shrink-0 ">                              
+                              <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="location = this.value;">
+                                  {% for status in statuses %}
+                                  <option value="{% if status.0 == 0 %}{{filter_url}}{%else%}{{filter_url}}?status={{status.0}}{%endif%}" {% if request.GET.status|add:'0' == status.0 %}selected{%endif%}>{{status.1}}</option>
+                                  {% endfor%}
+                              </select>                  
+                            </div>
+                            {% endif %}
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div id="table-search"></div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div> <!-- end col -->
+            </div>
+            {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

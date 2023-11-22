@@ -25,7 +25,9 @@
                     </a>
                 </div>
 
-                <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger shadow-none" id="topnav-hamburger-icon">
+                <button type="button"
+                    class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger shadow-none"
+                    id="topnav-hamburger-icon">
                     <span class="hamburger-icon">
                         <span></span>
                         <span></span>
@@ -36,9 +38,11 @@
                 <!-- App Search-->
                 <form class="app-search d-none d-md-block">
                     <div class="position-relative">
-                        <input type="text" class="form-control" placeholder="Search..." autocomplete="off" id="search-options" value="">
+                        <input type="text" class="form-control" placeholder="Search..." autocomplete="off"
+                            id="search-options" value="">
                         <span class="mdi mdi-magnify search-widget-icon"></span>
-                        <span class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none" id="search-close-options"></span>
+                        <span class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none"
+                            id="search-close-options"></span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
                         <div data-simplebar style="max-height: 320px;">
@@ -48,8 +52,10 @@
                             </div>
 
                             <div class="dropdown-item bg-transparent text-wrap">
-                                <a href="{% url 'home' %}" class="btn btn-soft-secondary btn-sm btn-rounded">how to setup <i class="mdi mdi-magnify ms-1"></i></a>
-                                <a href="{% url 'home' %}" class="btn btn-soft-secondary btn-sm btn-rounded">buttons <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="{% url 'home' %}" class="btn btn-soft-secondary btn-sm btn-rounded">how to
+                                    setup <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="{% url 'home' %}" class="btn btn-soft-secondary btn-sm btn-rounded">buttons <i
+                                        class="mdi mdi-magnify ms-1"></i></a>
                             </div>
                             <!-- item-->
                             <div class="dropdown-header mt-2">
@@ -83,7 +89,8 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="{% static 'assets/images/users/avatar-2.jpg' %}" class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                        <img src="{% static 'assets/images/users/avatar-2.jpg' %}"
+                                            class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-1">
                                             <h6 class="m-0">Angela Bernier</h6>
                                             <span class="fs-11 mb-0 text-muted">Manager</span>
@@ -93,7 +100,8 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="{% static 'assets/images/users/avatar-3.jpg' %}" class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                        <img src="{% static 'assets/images/users/avatar-3.jpg' %}"
+                                            class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-1">
                                             <h6 class="m-0">David Grasso</h6>
                                             <span class="fs-11 mb-0 text-muted">Web Designer</span>
@@ -103,7 +111,8 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="{% static 'assets/images/users/avatar-5.jpg' %}" class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                        <img src="{% static 'assets/images/users/avatar-5.jpg' %}"
+                                            class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-1">
                                             <h6 class="m-0">Mike Bunch</h6>
                                             <span class="fs-11 mb-0 text-muted">React Developer</span>
@@ -114,17 +123,18 @@
                         </div>
 
                         <div class="text-center pt-3 pb-1">
-                            <a href="pages-search-results.html" class="btn btn-primary btn-sm">View All Results <i class="ri-arrow-right-line ms-1"></i></a>
+                            <a href="pages-search-results.html" class="btn btn-primary btn-sm">View All Results <i
+                                    class="ri-arrow-right-line ms-1"></i></a>
                         </div>
                     </div>
                 </form>
             </div>
 
-         
+
         </div>
     </div>
 </header>
-    <!-- ========== App Menu ========== -->
+<!-- ========== App Menu ========== -->
 <div class="app-menu navbar-menu">
     <!-- LOGO -->
     <div class="navbar-brand-box">
@@ -146,10 +156,12 @@
                 <img src="{% static 'assets/images/logo.png' %}" alt="" height="60">
             </span>
         </a>
-        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
+            id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
     </div>
+    {% if user.role == 'admin' %}
 
     <div id="scrollbar">
         <div class="container-fluid">
@@ -163,8 +175,8 @@
                         <i class="mdi mdi-speedometer"></i> <span data-key="t-dashboards">Dashboard</span>
                     </a>
                 </li> {% endcomment %}
-                
-    
+
+
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'machine_types' %}">
                         <i class="mdi mdi-tools"></i> <span data-key="t-dashboards">Machine Type</span>
@@ -178,21 +190,24 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{% url 'add_customer' %}" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInvoices"><i class="mdi mdi-account"></i> Customers
+                    <a href="{% url 'add_customer' %}" class="nav-link" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarInvoices"><i class="mdi mdi-account"></i> Customers
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarInvoices">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{% url 'add_customer' %}" class="nav-link" ><i class="mdi mdi-plus"></i> Add Customers </a>
+                                <a href="{% url 'add_customer' %}" class="nav-link"><i class="mdi mdi-plus"></i> Add
+                                    Customers </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'customers' %}" class="nav-link" ><i class="mdi mdi-eye"></i> View Customers </a>
+                                <a href="{% url 'customers' %}" class="nav-link"><i class="mdi mdi-eye"></i> View
+                                    Customers </a>
                             </li>
 
                         </ul>
                     </div>
                 </li>
-                
+
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'complaints' %}">
@@ -211,52 +226,107 @@
                         <i class="mdi mdi-toolbox"></i> <span data-key="t-dashboards">Services</span>
                     </a>
                 </li>
-                
+
 
                 <li class="nav-item">
-                    <a href="{% url 'machine_types' %}" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInvoices">
+                    <a href="{% url 'machine_types' %}" class="nav-link" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarInvoices">
                         <i class="mdi mdi-speedometer"></i>Reports
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarInvoices">
                         <ul class="nav nav-sm flex-column">
-                         
+
                             <li class="nav-item">
-                                <a href="{% url 'report_complaints' %}" class="nav-link" > Complaints </a>
+                                <a href="{% url 'report_complaints' %}" class="nav-link"> Complaints </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="{% url 'report_machine_types' %}" class="nav-link" > Machine Type </a>
+                                <a href="{% url 'report_machine_types' %}" class="nav-link"> Machine Type </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'report_payment' %}" class="nav-link" > Payment </a>
+                                <a href="{% url 'report_payment' %}" class="nav-link"> Payment </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'report_services' %}" class="nav-link" > Service </a>
+                                <a href="{% url 'report_services' %}" class="nav-link"> Service </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'report_technicians' %}" class="nav-link" > Technicians </a>
+                                <a href="{% url 'report_technicians' %}" class="nav-link"> Technicians </a>
                             </li>
-                            
+
 
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'apks' %}" class="nav-link" > APKS </a>
+                    <a href="{% url 'apks' %}" class="nav-link"> APKS </a>
                 </li>
-            
-                    <li class="nav-item">
-                        <a href="{% url 'logout' %}" class="nav-link" > Logout </a>
-                    </li>
-                
 
-              
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link"> Logout </a>
+                </li>
+
+
+
 
             </ul>
         </div>
         <!-- Sidebar -->
     </div>
+    {% elif user.role == 'technician' %}
+    <div id="scrollbar">
+        <div class="container-fluid">
+
+            <div id="two-column-menu">
+            </div>
+            <ul class="navbar-nav" id="navbar-nav">
+                {% comment %} <li class="menu-title"><span data-key="t-menu">Menu</span></li> {% endcomment %}
+                {% comment %} <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'home' %}">
+                        <i class="mdi mdi-speedometer"></i> <span data-key="t-dashboards">Dashboard</span>
+                    </a>
+                </li> {% endcomment %}
+
+
+
+
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'complaints' %}">
+                        <i class="mdi mdi-format-list-checks"></i> <span data-key="t-dashboards">Pending Complaints
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'complaints' %}">
+                        <i class="mdi mdi-format-list-checks"></i> <span data-key="t-dashboards">Running Complaints
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'complaints' %}">
+                        <i class="mdi mdi-format-list-checks"></i> <span
+                            data-key="t-dashboards">Completed Complaints</span>
+                    </a>
+                </li>
+
+
+
+
+
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link"> Logout </a>
+                </li>
+
+
+
+
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+    {% endif %}
 </div>
-    <!-- Left Sidebar End -->
-    <!-- Vertical Overlay-->
+<!-- Left Sidebar End -->
+<!-- Vertical Overlay-->
 <div class="vertical-overlay"></div>
