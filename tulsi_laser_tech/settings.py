@@ -47,8 +47,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "rest_framework.authtoken",
-    'dal',
-    'dal_select2',
+    # 'dal',
+    # 'dal_select2',
     # "searchableselect"
 ]
 
@@ -87,22 +87,22 @@ WSGI_APPLICATION = 'tulsi_laser_tech.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tulsi_laser',
-        'USER': 'svlaser',
-        'PASSWORD': 'Svlaser@502',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'tulsi_laser',
+#         'USER': 'svlaser',
+#         'PASSWORD': 'Svlaser@502',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

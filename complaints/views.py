@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.contrib import messages
@@ -36,14 +36,25 @@ class Complaints(CreateView, FilterView):
         queryset = kwargs.pop('object_list', None)
         if queryset is None:
             self.object_list = self.model.objects.all()
-
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Add Complaint" 
         context["table_title"] = "Complaints" 
         context["show_lists"] = True
-        context["statuses"] = Complain.Statuses.choices
+        if self.request.user.role == "technician":
+            context["statuses"] = Complain.TechStatuses.choices
+        else:
+            context["statuses"] = Complain.Statuses.choices
         context["filter_url"] = reverse_lazy('complaints')
         return context
+    
+    def get_queryset(self):
+        if self.request.user.role == "technician":
+            queryset = self.queryset.filter(technician = self.request.user.technician)
+            return queryset
+
+        return self.queryset
+
+    
 
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -262,3 +273,10 @@ def checkIfLimitOver(request):
         return JsonResponse({"limit_over": True})
     else:
         return JsonResponse({"limit_over": False})
+
+def updateStatusToRunning(request, id):
+    complain = Complain.objects.get(id =id)
+    complain.status = Complain.Statuses.running
+    complain.save()
+
+    return redirect("complaints")

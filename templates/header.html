@@ -161,7 +161,7 @@
             <i class="ri-record-circle-line"></i>
         </button>
     </div>
-    {% if user.role == 'admin' %}
+    {% if user.role == 'admin' or user.is_superuser %}
 
     <div id="scrollbar">
         <div class="container-fluid">
@@ -292,26 +292,10 @@
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'complaints' %}">
-                        <i class="mdi mdi-format-list-checks"></i> <span data-key="t-dashboards">Pending Complaints
+                        <i class="mdi mdi-format-list-checks"></i> <span data-key="t-dashboards">Complaints
                         </span>
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{% url 'complaints' %}">
-                        <i class="mdi mdi-format-list-checks"></i> <span data-key="t-dashboards">Running Complaints
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{% url 'complaints' %}">
-                        <i class="mdi mdi-format-list-checks"></i> <span
-                            data-key="t-dashboards">Completed Complaints</span>
-                    </a>
-                </li>
-
-
-
 
 
                 <li class="nav-item">

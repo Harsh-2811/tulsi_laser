@@ -4,20 +4,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from users.models import *
 from customers.models import *
-from dal import autocomplete
+# from dal import autocomplete
 class TechnicianForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
     name = forms.CharField(widget=forms.TextInput())
-    # machine = forms.ModelChoiceField(
-    #     queryset=Machine.objects.all(),
-    #     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    # )
-    # customer = forms.ModelChoiceField(
-    #     queryset=Customer.objects.all(),
-    #     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    # )
-    
-
     class Meta:
         model = Technician
         fields = ("email", "name", "phone_1", "phone_2", "expertise", "address", "app_access", "web_access")
@@ -37,6 +27,23 @@ class TechnicianForm(forms.ModelForm):
         if email and User.objects.filter(email=email, username=email).exists():
             raise forms.ValidationError("This email address is already exists. Please supply a different email address.")
         return email
+
+class TechnicianEditForm(forms.ModelForm):
+    email = forms.EmailField(widget=forms.EmailInput())
+    name = forms.CharField(widget=forms.TextInput())
+    class Meta:
+        model = Technician
+        fields = ("email", "name", "phone_1", "phone_2", "expertise", "address", "app_access", "web_access")
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        # self.fields.pop('user')
+
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            if isinstance(visible.field.widget, forms.CheckboxInput):
+                visible.field.widget.attrs['class'] = 'form-check-input'
+                visible.field.widget.attrs['data_type'] = 'checkbox'
     
 
 class CustomAuthenticationForm(AuthenticationForm):

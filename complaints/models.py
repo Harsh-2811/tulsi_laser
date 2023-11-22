@@ -12,6 +12,12 @@ class Complain(models.Model):
         pending = 2, "Pending"
         running = 3, "Running"
         completed = 4, "Completed"
+    
+    class TechStatuses(models.IntegerChoices):
+        pending = 2, "Pending"
+        running = 3, "Running"
+        completed = 4, "Completed"
+
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
