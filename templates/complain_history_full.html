@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'assets/css/zebra_datepicker.css' %}" type="text/css">
+
+{% endblock extra_css %}
+{% block content %}
+
+<div class="main-content">
+
+    <div class="page-content">
+        {% include 'messages.html' %}
+        <div class="container-fluid">
+            {% if form.errors %}
+                {% if form.non_field_errors %}
+                    <ul class='form-errors'>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+          
+            <div class="row" style="justify-content:center">
+                <div class="col-xxl-6 col-sm-12">
+                    <div class="card  mt-4">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">Complain History</h4>
+                            <span class="mdi mdi-alert mdi-18px" id="over_alert" style="color:red; display:none;font-size:18px">Complain Limit Over</span>
+                        </div><!-- end card header -->  
+
+                        <div class="card-body">
+                            <div class="live-preview">
+                                
+                                {% for outcome in outcomes %}
+                                    <h5 class="fs-15">
+                                        Issue : {{ outcome.complain.issue }} on  {{ outcome.complain.updated_at|date:"d, M Y" }}
+                                    </h5>
+                                    
+                                    <p class="text-muted">Resolved By : {{outcome.complain.technician.user.first_name}}</p>
+                                    <p class="text-muted">Remark : {{outcome.remark}}</p>
+                                    <p class="text-muted">Water Filter : {% if outcome.water_filter %}<i class="mdi mdi-check-circle" style="color:green"></i>{% else %}<i class="mdi mdi-close-circle" style="color:red"></i>{% endif %}</p>
+                                    <p class="text-muted">Alignment : {% if outcome.alignment %}<i class="mdi mdi-check-circle" style="color:green"></i>{% else %}<i class="mdi mdi-close-circle" style="color:red"></i>{% endif %}</p>
+                                    {% if outcome.alignment %}<p class="text-muted">Ampere: {{ outcome.ampere }}, Watt: {{ outcome.watt }}, Voltage: {{ outcome.voltage }}, Temprature: {{ outcome.temp }}</p>{% endif %}
+                                    <hr/>
+                                    {% comment %} <p class="text-muted">Alignment : {{ }}</p> {% endcomment %}
+                                {% endfor %}
+                                <a href="{% url 'complaints' %}?status=3" class="btn btn-primary waves-effect waves-light" style="width:300px">Back</a>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> <!-- end col -->        
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

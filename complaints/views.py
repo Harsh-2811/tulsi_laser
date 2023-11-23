@@ -5,7 +5,7 @@ from django.contrib import messages
 from .models import Complain, Payment, Service, ComplainOutcome
 from django.http import HttpResponseRedirect, JsonResponse
 from customers.models import Machine, Customer
-from complaints.forms import ComplainForm, PaymentForm, ServiceForm, ServiceFormCreate
+from complaints.forms import ComplainForm, PaymentForm, ServiceForm, ServiceFormCreate, ComplainOutcomeForm
 from django.utils import timezone
 # Create your views here.
 
@@ -49,7 +49,7 @@ class Complaints(CreateView, FilterView):
     
     def get_queryset(self):
         if self.request.user.role == "technician":
-            queryset = self.queryset.filter(technician = self.request.user.technician)
+            queryset = Complain.objects.filter(technician = self.request.user.technician)
             return queryset
 
         return self.queryset
@@ -291,6 +291,16 @@ def getComplaintOutcomeByMachine(request):
         services = Service.objects.filter(machine_id = mid)[:5]
         return render(request, "complain_history.html", {"services":services})
     
+def getComplaintOutcomeByMachineId(request, machine_id):
+    mid = machine_id
+    # request_for = request.GET['request_for']
+    # if request_for == "outcomes":
+    outcomes = ComplainOutcome.objects.filter(complain__machine_id = mid).select_related('complain')[:5]
+    return render(request, "complain_history_full.html", {"outcomes":outcomes})
+    # elif request_for == "services":
+    #     services = Service.objects.filter(machine_id = mid)[:5]
+    #     return render(request, "complain_history.html", {"services":services})
+    
 def checkIfLimitOver(request):
     mid = request.GET['machine_id']
     machine = Machine.objects.get(id = mid)
@@ -306,4 +316,20 @@ def updateStatusToRunning(request, id):
     complain.status = Complain.Statuses.running
     complain.save()
 
-    return redirect("complaints")
+    return redirect("home")
+
+class ComplainOutcomeCreate(CreateView):
+    form_class = ComplainOutcomeForm
+    template_name = "completeComplain.html"
+    success_url = reverse_lazy('home')
+
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        complain = Complain.objects.get(id = self.request.GET['cid'])
+        obj.complain = complain
+        obj.technician = complain.technician
+        obj.complain.status = Complain.Statuses.completed
+        obj.complain.save()
+
+        return super().form_valid(form)

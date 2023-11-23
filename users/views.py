@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, resolve_url
 from django.urls import reverse_lazy
 from users.forms import TechnicianForm, TechnicianEditForm
 from users.models import User, Technician, APKs
@@ -16,7 +16,8 @@ from datetime import datetime, timedelta
 def home(request):
     # Your view logic here
     if request.user.role == "technician":
-        return redirect("complaints")
+        
+        return redirect(resolve_url("complaints") + "?status=2")
     total_customers = Customer.objects.count()
     total_machines = Machine.objects.all()
     todays_complaints = Complain.objects.filter(date=timezone.now().date()).count()

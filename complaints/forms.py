@@ -1,5 +1,5 @@
 from django import forms
-from complaints.models import Complain, Payment, Service
+from complaints.models import Complain, Payment, Service, ComplainOutcome
 from customers.models import Customer
 from django.utils import timezone
 # from searchableselect.widgets import SearchableSelect
@@ -81,3 +81,29 @@ class ServiceFormCreate(ServiceForm):
         super().__init__(*args, **kwargs)
         self.fields.pop('completed_date')
         self.fields.pop('completed_by')
+
+
+TRUE_FALSE_CHOICES = (
+    (True, 'Yes'),
+    (False, 'No')
+)
+
+class ComplainOutcomeForm(forms.ModelForm):
+    class Meta:
+        model = ComplainOutcome
+        fields = "__all__"
+        widgets = {
+            'alignment': forms.Select(choices=TRUE_FALSE_CHOICES),
+            'water_filter': forms.Select(choices=TRUE_FALSE_CHOICES),
+        }
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields.pop('complain')
+        self.fields.pop('technician')
+        
+        for visible in self.visible_fields():
+            if isinstance(visible.field.widget, forms.Select):
+                visible.field.widget.attrs['class'] = 'form-select'
+            else:
+                visible.field.widget.attrs['class'] = 'form-control'

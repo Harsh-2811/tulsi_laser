@@ -90,6 +90,7 @@
             </div>
             {% endif %}
             {% elif user.role == 'technician' %}
+          
             {% if show_lists %}
 
             <div class="row" style="justify-content:center">
@@ -336,20 +337,19 @@
         formatter: function (e, row) {
           if(row.cells[2].data == 2){
             return gridjs.html(
-            `<a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-check mdi-24px'></i></a>
-            <a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-history mdi-24px'></i></a>`
+            `<a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-check mdi-24px'></i></a>`
             
              );
           }
           else if(row.cells[2].data == 3){
             return gridjs.html(
-            `<a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-check mdi-24px'></i></a>
-            <a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-history mdi-24px'></i></a>`
+            `<a href='/complaints/completeComplain/?cid=${row.cells[0].data}'><i class='mdi mdi-check mdi-24px'></i></a>
+            <a href='/complaints/getComplaintOutcomeByMachine/${row.cells[12].data}/'><i class='mdi mdi-history mdi-24px'></i></a>`
              );
           }
           else if(row.cells[2].data == 4){
             return gridjs.html(
-            `<a href='/complaints/updateStatusToRunning/${row.cells[0].data}/'><i class='mdi mdi-check mdi-24px'></i> Approve</a>`
+            ``
              );
           }
           
@@ -415,6 +415,10 @@
 
         },
       }, "Created Date",
+      {
+        name : "Machine Id",
+        hidden: true
+      },
       
     ],
       pagination: { limit: 5 },
@@ -436,6 +440,7 @@
             "",
 
             "{{ complaint.created_at|date:'M d, Y' }}",
+            "{{ complaint.machine.id }}",
 
 
             ],

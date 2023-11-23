@@ -287,11 +287,16 @@
                 </li> {% endcomment %}
 
 
-
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'home' %}">
+                        <i class="mdi mdi-account"></i> <span data-key="t-dashboards">{{ user.first_name }}, {{ user.technician.phone_1 }}
+                        </span>
+                    </a>
+                </li>
 
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{% url 'complaints' %}">
+                    <a class="nav-link menu-link" href="{% url 'home' %}">
                         <i class="mdi mdi-format-list-checks"></i> <span data-key="t-dashboards">Complaints
                         </span>
                     </a>
