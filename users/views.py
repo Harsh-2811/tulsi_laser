@@ -54,15 +54,17 @@ class Technicians(CreateView, ListView):
     success_url = reverse_lazy('technicians')
     context_object_name = "technicians"
     queryset = Technician.objects.all().order_by('-created_at')
-    
+    model = Technician
 
     def get_context_data(self, **kwargs):
-
-        kwargs['object_list'] = Technician.objects.all().order_by('-created_at')
-        kwargs["form_title"] = "Add Technician" 
-        kwargs["table_title"] = "Technicians" 
-        kwargs["show_lists"] = True
-        return super(Technicians, self).get_context_data(**kwargs)
+        queryset = kwargs.pop('object_list', None)
+        if queryset is None:
+            self.object_list = self.model.objects.all()
+        context = super().get_context_data(**kwargs)
+        context["form_title"] = "Add Technician" 
+        context["table_title"] = "Technicians" 
+        context["show_lists"] = True
+        return context
 
     def form_valid(self, form):
         username = self.request.POST['email']
