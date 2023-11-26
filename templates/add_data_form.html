@@ -655,7 +655,10 @@
       success: function (data) {   // `data` is the return of the `load_cities` view function
         $("#history").html(data);  // replace the contents of the city input with the data that came from the server
       }
+      });
     });
+
+    {% if request.path == "/complaints/complaints/" %}
 
     over_url = "{% url 'checkIfLimitOver' %}"
     $.ajax({                       // initialize an AJAX request
@@ -673,7 +676,7 @@
         }
       }
     });
-  });
+    {% endif %}
 
 
 
