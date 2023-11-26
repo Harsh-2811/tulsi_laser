@@ -659,7 +659,7 @@
     });
 
     {% if request.path == "/complaints/complaints/" %}
-
+    var machine_id = $("#id_machine").select2('data')[0]['id'];
     over_url = "{% url 'checkIfLimitOver' %}"
     $.ajax({                       // initialize an AJAX request
       url: over_url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
