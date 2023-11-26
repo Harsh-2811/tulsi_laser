@@ -227,7 +227,7 @@
       },
       {
         name : "Status Hidden",
-        hidden: true
+      
       },
       {
         name : "Repeated Hidden",
@@ -243,21 +243,21 @@
         formatter: function (e, row) {
          if (row.cells[1].data == 1){
             return gridjs.html(
-                '<span class="badge badge-primary">New</span>'
+                '<span class="badge bg-primary">New</span>'
               );
          }else if(row.cells[1].data == 2){
             return gridjs.html(
-                '<span class="badge badge-secondary">Pending</span>'
+                '<span class="badge bg-secondary">Pending</span>'
               );
          }
          else if(row.cells[1].data == 3){
           return gridjs.html(
-              '<span class="badge badge-warning">Running</span>'
+              '<span class="badge bg-warning">Running</span>'
             );
         }
         else if(row.cells[1].data == 4){
           return gridjs.html(
-              '<span class="badge badge-success">Completed</span>'
+              '<span class="badge bg-success">Completed</span>'
             );
          }
           

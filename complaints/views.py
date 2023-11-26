@@ -315,7 +315,7 @@ def updateStatusToRunning(request, id):
     complain = Complain.objects.get(id =id)
     complain.status = Complain.Statuses.running
     complain.save()
-
+    messages.success(request, "Complain Request Accepted. Status Updated to Running..")
     return redirect("home")
 
 class ComplainOutcomeCreate(CreateView):
@@ -331,5 +331,6 @@ class ComplainOutcomeCreate(CreateView):
         obj.technician = complain.technician
         obj.complain.status = Complain.Statuses.completed
         obj.complain.save()
+        messages.success(self.request, "Complain Resolved. Status updated to Completed..")
 
         return super().form_valid(form)
