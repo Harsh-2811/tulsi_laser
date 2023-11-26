@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, resolve_url
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.contrib import messages
@@ -316,12 +316,12 @@ def updateStatusToRunning(request, id):
     complain.status = Complain.Statuses.running
     complain.save()
     messages.success(request, "Complain Request Accepted. Status Updated to Running..")
-    return redirect("home")
+    return redirect(resolve_url("complaints") + "?status=3")
 
 class ComplainOutcomeCreate(CreateView):
     form_class = ComplainOutcomeForm
     template_name = "completeComplain.html"
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('complaints') + "?status=4"
 
 
     def form_valid(self, form):

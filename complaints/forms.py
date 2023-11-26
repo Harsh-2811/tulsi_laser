@@ -101,6 +101,8 @@ class ComplainOutcomeForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields.pop('complain')
         self.fields.pop('technician')
+        self.fields.pop('signature')
+
         
         for visible in self.visible_fields():
             if isinstance(visible.field.widget, forms.Select):
