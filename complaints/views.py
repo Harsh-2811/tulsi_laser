@@ -321,8 +321,6 @@ def updateStatusToRunning(request, id):
 class ComplainOutcomeCreate(CreateView):
     form_class = ComplainOutcomeForm
     template_name = "completeComplain.html"
-    success_url = reverse_lazy('complaints') + "?status=4"
-
 
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -333,4 +331,5 @@ class ComplainOutcomeCreate(CreateView):
         obj.complain.save()
         messages.success(self.request, "Complain Resolved. Status updated to Completed..")
 
-        return super().form_valid(form)
+        self.object = form.save()
+        return redirect(resolve_url("complaints") + "?status=4")
