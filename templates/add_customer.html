@@ -69,37 +69,40 @@
                 
             </tr>
         </script>
-        <div class="table-responsive card mt-4">
+        <div class="card mt-4">
             <div class="card-header card-header-secondary">
                 <h4 class="card-title">Add Machines</h4>
             </div>
-            <table class="table card-body">
+            <div class="table-responsive table-card my-3">
+                <table class="table align-middle table-nowrap table-striped-columns mb-0">
                
-                <tbody id="item-images">  <!-- id="item-inlineformsetname" -->
-                    <!-- formset non forms errors -->
-                    {% for error in formset.non_form_errors %}
-                        <span style="color: red">{{ error }}</span>
-                    {% endfor %}
-                    {% for formss in formset %}
-                        {{ formss.management_form }}
-                        <tr id="images-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
-                            {{ formss.id }}
-                            {% for field in formss.visible_fields %}
-                                <td>
-                                    <label for="{{field.id}}" class="form-label">{{ field.label }}</label>
-                                                    {{ field }}
-                                    {% for error in field.errors %}
-                                        <span style="color: red">{{ error }}</span>
-                                    {% endfor %}
-                                </td>
-                            {% endfor %}
-                                   
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            <a href="#" id="add-image-button" class="btn btn-outline-secondary add-images">Add Machine</a> <!-- id="add-inlineformsetname-button" -->
-                        </div>
+                    <tbody id="item-images">  <!-- id="item-inlineformsetname" -->
+                        <!-- formset non forms errors -->
+                        {% for error in formset.non_form_errors %}
+                            <span style="color: red">{{ error }}</span>
+                        {% endfor %}
+                        {% for formss in formset %}
+                            {{ formss.management_form }}
+                            <tr id="images-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                {{ formss.id }}
+                                {% for field in formss.visible_fields %}
+                                    <td>
+                                        <label for="{{field.id}}" class="form-label">{% if field.label == 'Code'%} Machine Code {% elif field.label == 'Warranty'%} Machine Warranty {% else %}{{ field.label }}{% endif %}</label>
+                                                        {{ field }}
+                                        {% for error in field.errors %}
+                                            <span style="color: red">{{ error }}</span>
+                                        {% endfor %}
+                                    </td>
+                                {% endfor %}
+                                       
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+        <a href="#" id="add-image-button" class="btn btn-outline-secondary add-images">Add Machine</a> <!-- id="add-inlineformsetname-button" -->
+    </div>
                     {% endwith %}
 
                                         <!--end col-->
