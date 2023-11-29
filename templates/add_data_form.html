@@ -397,7 +397,7 @@
         width: "100px",
         formatter: function (e, row) {
          
-            if(row.cells[2].data == "0" || row.cells[2].data == "1"){
+            if(row.cells[3].data == "0" || row.cells[3].data == "1"){
               return gridjs.html(
                 `
                 <span class="badge border border-primary text-primary">Single Time</span>
@@ -407,7 +407,7 @@
              }else{
               return gridjs.html(
                 `
-                <span class="badge bg-danger ms-1"> ${row.cells[2].data} Times</span>
+                <span class="badge bg-danger ms-1"> ${row.cells[3].data} Times</span>
 
                 `
                 );
