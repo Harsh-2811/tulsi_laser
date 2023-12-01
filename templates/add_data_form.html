@@ -291,10 +291,19 @@
         name: "Actions",
         width: "100px",
         formatter: function (e, row) {
-          return gridjs.html(
+          if(row.cells[1].data == 4){
+            return gridjs.html(
             `<a href='/complaints/complaints/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
             <a href="/complaints/complaints/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
           );
+           }else{
+            return gridjs.html(
+              `<a href='/complaints/complaints/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
+              <a href='/complaints/completeComplain/?cid=${row.cells[0].data}'><i class='mdi mdi-check mdi-24px'></i></a>
+              <a href="/complaints/complaints/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
+            );
+           }
+          
         },
       },
     ],
