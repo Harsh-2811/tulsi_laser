@@ -20,11 +20,14 @@ class Command(BaseCommand):
         print(sheet_name)
         xls = pd.ExcelFile(file_path)
         df1 = pd.read_excel(xls, sheet_name,skiprows=int(skip_row))
-    
+      
         print(f"Columns in Excel: {df1.columns}")
 
         for index, row in df1.iterrows():
             # Use correct column names
+            __type = row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME']
+            if not __type:
+                continue
             try:
                 machine_type = MachineType.objects.get(_type=row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME'])
             except MachineType.DoesNotExist:
