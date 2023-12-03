@@ -26,9 +26,9 @@ class MachineType(models.Model):
 class Customer(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     company_name = models.CharField(max_length=265)
-    company_mobile_no = PhoneNumberField(unique=True)
-    manager_name = models.CharField(max_length=265)
-    manager_mobile_no = models.CharField(max_length=265, unique=True)
+    company_mobile_no = PhoneNumberField(null=True, blank=True)
+    manager_name = models.CharField(max_length=265, null=True, blank=True)
+    manager_mobile_no = models.CharField(max_length=265, null=True, blank=True)
     accountant_name = models.CharField(max_length=265, null=True, blank=True)
     accountant_mobile_no = models.CharField(max_length=265, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
