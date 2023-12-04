@@ -28,10 +28,11 @@ class Command(BaseCommand):
             __type = row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME']
             if not __type:
                 continue
+            _type = str(__type).strip()
             try:
-                machine_type = MachineType.objects.get(_type=row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME'])
+                machine_type = MachineType.objects.get(_type=_type)
             except MachineType.DoesNotExist:
-                machine_type = MachineType.objects.create(_type=row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME'])
+                machine_type = MachineType.objects.create(_type=_type)
 
             try:
                 customer = Customer.objects.get(company_name=row['PARTY NAME'] )
