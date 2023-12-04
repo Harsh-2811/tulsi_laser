@@ -26,7 +26,7 @@ class Command(BaseCommand):
         for index, row in df1.iterrows():
             # Use correct column names
             __type = row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME']
-            if not __type:
+            if not __type and __type == "nan":
                 continue
             _type = str(__type).strip()
             try:
