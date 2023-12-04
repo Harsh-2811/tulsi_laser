@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 machine_type = MachineType.objects.create(_type=row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME'])
 
             try:
-                customer = Customer.objects.get(company_name=row['PARTY NAME'], )
+                customer = Customer.objects.get(company_name=row['PARTY NAME'] )
             except Customer.DoesNotExist:
                 email = "tulsilasertec@gmail.com"
                 try:
