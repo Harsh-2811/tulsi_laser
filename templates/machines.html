@@ -108,7 +108,7 @@
         columns: [ { 
             name: 'id',
             hidden: true
-        },"Code","Company Name", "Company Mobile No","Purchase Date", "Warranty", "Complain Limit", "Warranty Ends this Month",  {
+        },"Code", "Machine Type","Company Name", "Company Mobile No","Purchase Date", "Warranty", "Complain Limit", "Warranty Ends this Month",  {
             name: "History",
             width: "100px",
             formatter: function (e, row) {
@@ -128,6 +128,8 @@
                 [
                 "{{ machine.id }}",
                 "{{ machine.code }}",
+                "{{ machine.machine_type._type }}",
+
                 "{{ machine.customer.company_name }}",
                 "{{ machine.customer.company_mobile_no }}",
                 "{{ machine.purchase_date|date:'M d, Y' }}",
