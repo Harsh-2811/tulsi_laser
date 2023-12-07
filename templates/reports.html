@@ -20,7 +20,7 @@
                     </ul>
                 {% endif %}
             {% endif %}
-     
+            {% if not read_only %}
             <div class="row" style="justify-content:center">
                 <div class="col-xxl-{% if single_field %}6{% else %}12{% endif %}">
                     <div class="card  mt-4">
@@ -71,7 +71,7 @@
          
 
             </div>
-
+            {% endif %}
             {% if show_lists %}
      
             <div class="row" style="justify-content:center">

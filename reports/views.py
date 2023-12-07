@@ -47,9 +47,10 @@ class ComplaintReport(FormView, ListView):
 
         print(data)
         complaint_outcomes = ComplainOutcome.objects.all()
+        read_only = False
         if complain_id:
             complaint_outcomes = complaint_outcomes.filter(complain__id = int(complain_id)).select_related('complain')
-
+            read_only = True
         if customer:
             complaint_outcomes = complaint_outcomes.filter(complain__customer_id = int(customer)).select_related('complain')
         
@@ -76,7 +77,8 @@ class ComplaintReport(FormView, ListView):
         
         context.update(
                 {
-                    "show_lists":True
+                    "show_lists":True,
+                    "read_only": read_only
                 }
             )
         return self.render_to_response(context)
