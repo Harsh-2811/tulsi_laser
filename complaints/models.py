@@ -78,7 +78,7 @@ class ComplainOutcome(models.Model):
         fake = "Fake", "Fake"
         
     complain = models.ForeignKey(Complain, on_delete=models.CASCADE)
-    technician = models.ForeignKey(Technician, on_delete=models.CASCADE)
+    technician = models.ForeignKey(Technician, on_delete=models.CASCADE,null=True, blank=True)
     complaint_type = models.CharField(choices=Complaint_types.choices, max_length=50)
     challan = models.CharField(null=True, blank=True, max_length=20) 
     remark = models.CharField(max_length=255)

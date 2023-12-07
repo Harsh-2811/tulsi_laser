@@ -35,6 +35,7 @@ class ComplaintReport(FormView, ListView):
         # You can update the context here
         context = self.get_context_data()
         data = self.request.POST
+        complain_id = data.get('complain_id')
         start_date = data.get('start_date')
         end_date = data.get('end_date')
         customer = data.get('customer')
@@ -46,6 +47,9 @@ class ComplaintReport(FormView, ListView):
 
         print(data)
         complaint_outcomes = ComplainOutcome.objects.all()
+        if complain_id:
+            complaint_outcomes = complaint_outcomes.filter(complain__id = int(complain_id)).select_related('complain')
+
         if customer:
             complaint_outcomes = complaint_outcomes.filter(complain__customer_id = int(customer)).select_related('complain')
         

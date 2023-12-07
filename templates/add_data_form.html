@@ -294,7 +294,12 @@
           if(row.cells[1].data == 4){
             return gridjs.html(
             `<a href='/complaints/complaints/edit/${row.cells[0].data}/'> <i class='mdi mdi-square-edit-outline mdi-24px'></i></a> 
-            <a href="/complaints/complaints/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>`
+            <a href="/complaints/complaints/delete/${row.cells[0].data}/"> <i class='mdi mdi-delete-outline mdi-24px'></i></a>
+            <form action='/reports/complaints/' method="post">{% csrf_token %}
+              <input type="hidden" name="complain_id" value="${row.cells[0].data}" />
+              <button type="submit" style="border:none;padding:0;background:none"><i class="mdi mdi-history mdi-24px text-primary"></i></button>
+          </form>
+          `
           );
            }else{
             return gridjs.html(
