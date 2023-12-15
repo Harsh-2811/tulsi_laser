@@ -20,7 +20,7 @@ class Command(BaseCommand):
         skip_row = kwargs['skip_row']
         print(sheet_name)
         xls = pd.ExcelFile(file_path)
-        df1 = pd.read_excel(xls, sheet_name,skiprows=int(skip_row), keep_default_na=False)
+        df1 = pd.read_excel(xls, sheet_name,skiprows=int(skip_row))
         df1.fillna(0, inplace=True)
       
         print(f"Columns in Excel: {df1.columns}")
@@ -53,7 +53,10 @@ class Command(BaseCommand):
                 else:
                     customer = Customer.objects.create(company_name=row['PARTY NAME'], address=row.get('ADDRESS'), user=user, company_mobile_no=f"+91 {row['CONTACT NO']}" if row['CONTACT NO'] not in ("nan", None) else "")
 
-            try:
-                machine = Machine.objects.get(code=row['TYPE NO'] if row.get('TYPE NO') else row['MACHINE NAME'])
-            except Machine.DoesNotExist:
-                machine = Machine.objects.create(code=row['TYPE NO'] if row.get('TYPE NO') else row['MACHINE NAME'], machine_type=machine_type, purchase_date=row['DATE'], customer=customer, duration=10, warranty = Machine.Warranty.yearly)
+            if row.get('TYPE NO'):
+                try:
+                    machine = Machine.objects.get(code=row['TYPE NO'])
+                except Machine.DoesNotExist:
+                    machine = Machine.objects.create(code=row['TYPE NO'], machine_type=machine_type, purchase_date=row['DATE'], customer=customer, duration=10, warranty = Machine.Warranty.yearly)
+            else:
+                machine = Machine.objects.create(code=row['TYPE NO'], machine_type=machine_type, purchase_date=row['DATE'], customer=customer, duration=10, warranty = Machine.Warranty.yearly)
