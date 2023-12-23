@@ -16,7 +16,7 @@ class Command(BaseCommand):
         parser.add_argument('-s', '--skip_row', type=str )
 
     def handle(self, *args, **kwargs):
-        file_path = os.path.join(settings.BASE_DIR, "all_machine_list.xlsx")
+        file_path = os.path.join(settings.BASE_DIR, "all_machine_list_new.xlsx")
         sheet_name = kwargs['sheet_name']
         skip_row = kwargs['skip_row']
         print(sheet_name)
