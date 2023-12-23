@@ -5,6 +5,7 @@ from customers.models import Customer, Machine, MachineType
 import os
 import pandas as pd
 import numpy as np
+from datetime import datetime
 from users.models import User
 
 class Command(BaseCommand):
@@ -57,6 +58,10 @@ class Command(BaseCommand):
                 try:
                     machine = Machine.objects.get(code=row['TYPE NO'])
                 except Machine.DoesNotExist:
-                    machine = Machine.objects.create(code=row['TYPE NO'], machine_type=machine_type, purchase_date=row['DATE'], customer=customer, duration=10, warranty = Machine.Warranty.yearly)
+                    if row['DATE'] == "AMC":
+                        purchase_date = None
+                    else:
+                        purchase_date = row['DATE']
+                    machine = Machine.objects.create(code=row['TYPE NO'], machine_type=machine_type, purchase_date=purchase_date, customer=customer, duration=10, warranty = Machine.Warranty.yearly)
             else:
                 machine = Machine.objects.create(code=row['TYPE NO'], machine_type=machine_type, purchase_date=row['DATE'], customer=customer, duration=10, warranty = Machine.Warranty.yearly)

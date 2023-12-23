@@ -50,7 +50,7 @@ class Machine(models.Model):
     code = models.CharField(max_length=100)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="machines")
     machine_type = models.ForeignKey(MachineType, on_delete=models.CASCADE)
-    purchase_date = models.DateField()
+    purchase_date = models.DateField(null=True, blank=True)
     warranty = models.CharField(choices=Warranty.choices, max_length=100)
     duration = models.DecimalField(max_digits=3, decimal_places=1)
     warranty_end_date = models.DateField(null=True, blank=True)
