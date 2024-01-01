@@ -24,13 +24,25 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class MachineSerializer(serializers.ModelSerializer):
     machine_type = serializers.SlugRelatedField(slug_field='_type', read_only = True)
-    purchase_date = serializers.SerializerMethodField(read_only = True)
+    warranty_end_date = serializers.SerializerMethodField(read_only = True)
+    complain_limit = serializers.SerializerMethodField(read_only = True)
+    notify_on = serializers.SerializerMethodField(read_only = True)
+
     class Meta:
         model = Machine
         fields = '__all__'
 
     def get_purchase_date(self, instance):
         return (instance.purchase_date if instance.purchase_date else '')
+    
+    def get_warranty_end_date(self, instance):
+        return (instance.warranty_end_date if instance.warranty_end_date else '')
+    
+    def get_complain_limit(self, instance):
+        return (instance.complain_limit if instance.complain_limit else '')
+    
+    def get_notify_on(self, instance):
+        return (instance.notify_on if instance.notify_on else '')
 
 class TechnicianSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only = True)
