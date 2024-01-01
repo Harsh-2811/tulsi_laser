@@ -97,8 +97,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tulsi_laser',
-        'USER': 'svlaser',
-        'PASSWORD': 'Svlaser@502',
+        'USER': 'tulsi_laser',
+        'PASSWORD': 'TulsiLaser@123',
         'HOST': 'localhost',
         'PORT': 5432,
     }
