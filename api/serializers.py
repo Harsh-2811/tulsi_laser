@@ -24,10 +24,13 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class MachineSerializer(serializers.ModelSerializer):
     machine_type = serializers.SlugRelatedField(slug_field='_type', read_only = True)
+    purchase_date = serializers.SerializerMethodField(read_only = True)
     class Meta:
         model = Machine
         fields = '__all__'
 
+    def get_purchase_date(self, instance):
+        return (instance.purchase_date if instance.purchase_date else '')
 
 class TechnicianSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only = True)
