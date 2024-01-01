@@ -17,6 +17,23 @@ class UpdateStatusSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+    manager_name = serializers.SerializerMethodField(read_only = True)
+    manager_mobile_no = serializers.SerializerMethodField(read_only = True)
+    accountant_name = serializers.SerializerMethodField(read_only = True)
+    accountant_mobile_no = serializers.SerializerMethodField(read_only = True)
+
+    def get_manager_name(self, instance):
+        return (instance.manager_name if instance.manager_name else '')
+    
+    def get_manager_mobile_no(self, instance):
+        return (instance.manager_mobile_no if instance.manager_mobile_no else '')
+    
+    def get_accountant_name(self, instance):
+        return (instance.accountant_name if instance.accountant_name else '')
+    
+    def get_accountant_mobile_no(self, instance):
+        return (instance.accountant_mobile_no if instance.accountant_mobile_no else '')
+
     class Meta:
         model = Customer
         fields = '__all__'
@@ -59,23 +76,6 @@ class ComplainSerializer(serializers.ModelSerializer):
     customer = CustomerSerializer()
     machine = MachineSerializer()
     technician = TechnicianSerializer()
-    manager_name = serializers.SerializerMethodField(read_only = True)
-    manager_mobile_no = serializers.SerializerMethodField(read_only = True)
-    accountant_name = serializers.SerializerMethodField(read_only = True)
-    accountant_mobile_no = serializers.SerializerMethodField(read_only = True)
-
-
-    def get_manager_name(self, instance):
-        return (instance.manager_name if instance.manager_name else '')
-    
-    def get_manager_mobile_no(self, instance):
-        return (instance.manager_mobile_no if instance.manager_mobile_no else '')
-    
-    def get_accountant_name(self, instance):
-        return (instance.accountant_name if instance.accountant_name else '')
-    
-    def get_accountant_mobile_no(self, instance):
-        return (instance.accountant_mobile_no if instance.accountant_mobile_no else '')
     
     class Meta:
         model = Complain
