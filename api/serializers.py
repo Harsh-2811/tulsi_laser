@@ -27,6 +27,7 @@ class MachineSerializer(serializers.ModelSerializer):
     warranty_end_date = serializers.SerializerMethodField(read_only = True)
     complain_limit = serializers.SerializerMethodField(read_only = True)
     notify_on = serializers.SerializerMethodField(read_only = True)
+    purchase_date = serializers.SerializerMethodField(read_only = True)
 
     class Meta:
         model = Machine
