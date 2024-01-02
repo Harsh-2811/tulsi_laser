@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zlg(cj(n@i5&szr@xfi$nwl4e475kf-1l@g!@$k#&4(-2&)q#a
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://64.227.144.27', 'https://app.tulsilaser.com']
+CSRF_TRUSTED_ORIGINS = ['http://139.59.42.151', 'https://app.tulsilaser.com']
 
 # Application definition
 
