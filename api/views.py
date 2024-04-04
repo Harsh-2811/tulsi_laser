@@ -100,9 +100,9 @@ class ComplainViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if IsTechnicianUser().has_permission(self.request, self):
-            return Complain.objects.filter(technician__user=user, created_at__date = timezone.now().date())
+            return Complain.objects.filter(technician__user=user).exclude(created_at__lt=timezone.now() - timezone.timedelta(days=7))
         else:
-            return Complain.objects.filter(created_at__date = timezone.now().date())
+            return Complain.objects.all().exclude(created_at__lt=timezone.now() - timezone.timedelta(days=7))
 
 
 class ComplainOutcomeByCustomerID(ListCreateAPIView):
