@@ -25,7 +25,7 @@ class UserLogin(GenericAPIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-        user = User.objects.filter(username=username).first()
+        user = User.objects.filter(username__iexact=username).first()
         
         if user is None:
             return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
