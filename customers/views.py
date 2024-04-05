@@ -150,11 +150,12 @@ class EdiCustomers(CustomerInline, UpdateView):
 
     def form_valid(self, form):
         username = self.request.POST['email']
+        if username not in ("tulsilasertech@gmail.com", "tulsilasertec@gmail.com"):
         # name = self.request.POST['name']
-        form.instance.user.username = username
-        form.instance.user.email = username
-        form.instance.user.first_name = form.instance.company_name
-        form.instance.user.save()
+            form.instance.user.username = username
+            form.instance.user.email = username
+            form.instance.user.first_name = form.instance.company_name
+            form.instance.user.save()
         messages.success(self.request, "Customer Updated successfully!!!")
         return super().form_valid(form)
 

@@ -72,10 +72,11 @@ class MachineForm(forms.ModelForm):
                 visible.field.widget.attrs['class'] = 'form-control'
 
     def save(self, commit: bool = ...) -> Any:
-        self.instance.warranty_end_date =(self.instance.purchase_date + timezone.timedelta(days=(self.instance.notify_on * 30)))
+        if self.instance.notify_on:
+            self.instance.warranty_end_date =(self.instance.purchase_date + timezone.timedelta(days=(self.instance.notify_on * 30)))
         return super().save(commit)
 
 MachineFormSet = inlineformset_factory(
     Customer, Machine, form=MachineForm,
-    extra=0, can_delete=True, can_delete_extra=True
+    extra=1, can_delete=True, can_delete_extra=True
 )

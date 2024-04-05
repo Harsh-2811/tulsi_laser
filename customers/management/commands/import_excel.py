@@ -42,7 +42,7 @@ class Command(BaseCommand):
             try:
                 customer = Customer.objects.get(company_name=row['PARTY NAME'] )
             except Customer.DoesNotExist:
-                email = "tulsilasertec@gmail.com"
+                email = "tulsilasertech@gmail.com"
                 try:
                     user = User.objects.get(username=row['PARTY NAME'])
                 except User.DoesNotExist:

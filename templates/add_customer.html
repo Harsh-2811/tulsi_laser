@@ -75,6 +75,11 @@
             </div>
             <div class="table-responsive table-card my-3">
                 <table class="table align-middle table-nowrap table-striped-columns mb-0">
+                    <thead>
+                        {% for field in formset.0.visible_fields %}
+                        <th class="form-label">{{ field.label }}</th>
+                        {% endfor %}
+                    </thead>
                
                     <tbody id="item-images">  <!-- id="item-inlineformsetname" -->
                         <!-- formset non forms errors -->
@@ -82,12 +87,16 @@
                             <span style="color: red">{{ error }}</span>
                         {% endfor %}
                         {% for formss in formset %}
+                        
                             {{ formss.management_form }}
                             <tr id="images-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
                                 {{ formss.id }}
                                 {% for field in formss.visible_fields %}
+                                
                                     <td>
-                                        <label for="{{field.id}}" class="form-label">{% if field.label == 'Code'%} Machine Code {% elif field.label == 'Warranty'%} Machine Warranty {% else %}{{ field.label }}{% endif %}</label>
+                                    
+
+                                       
                                                         {{ field }}
                                         {% for error in field.errors %}
                                             <span style="color: red">{{ error }}</span>
