@@ -16,7 +16,7 @@ class Command(BaseCommand):
         parser.add_argument('-s', '--skip_row', type=str )
 
     def handle(self, *args, **kwargs):
-        file_path = os.path.join(settings.BASE_DIR, "all_machine_list_new.xlsx")
+        file_path = os.path.join(settings.BASE_DIR, "new_machines.xlsx")
         sheet_name = kwargs['sheet_name']
         skip_row = kwargs['skip_row']
         print(sheet_name)
@@ -25,9 +25,9 @@ class Command(BaseCommand):
         df1.fillna(0, inplace=True)
       
         print(f"Columns in Excel: {df1.columns}")
-        MachineType.objects.all().delete()
-        Machine.objects.all().delete()
-        Customer.objects.all().delete()
+        # MachineType.objects.all().delete()
+        # Machine.objects.all().delete()
+        # Customer.objects.all().delete()
         for index, row in df1.iterrows():
             # Use correct column names
             __type = row['MACHINE TYPE'] if row.get('MACHINE TYPE') else row['MACHINE NAME']
