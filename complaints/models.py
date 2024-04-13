@@ -42,7 +42,8 @@ class Complain(models.Model):
     @property
     def solution(self):
         if self.status == self.Statuses.completed:
-            return ComplainOutcome.objects.filter(complain = self).first().remark
+            if ComplainOutcome.objects.filter(complain = self).first():
+                return ComplainOutcome.objects.filter(complain = self).first().remark
         return None
     
 class Payment(models.Model):
