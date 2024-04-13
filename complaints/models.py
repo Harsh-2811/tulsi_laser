@@ -39,6 +39,12 @@ class Complain(models.Model):
         is_complain_exits = Complain.objects.filter(machine = self.machine, date = self.date).count()
         return is_complain_exits
     
+    @property
+    def solution(self):
+        if self.status == self.Statuses.completed:
+            return ComplainOutcome.objects.filter(complain = self).first().remark
+        return None
+    
 class Payment(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)

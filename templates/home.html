@@ -133,6 +133,8 @@
 
                                             <th scope="col">Technician</th>
                                             <th scope="col">Issue</th>
+                                            <th scope="col">Solution / Remark</th>
+
                                             <th scope="col">Status</th>
                                         </tr>
                                     </thead>
@@ -150,6 +152,8 @@
 
                                                 <td>{{ complaint.technician.user.first_name}}</td>
                                                 <td>{{ complaint.issue}}</td>
+                                                <td>{{ complaint.solution}}</td>
+
                                                  {% if complaint.status == 1 %}
                                                <td><span class="badge badge-soft-primary">{{complaint.get_status_display}}</span></td>
                                                {% elif complaint.status == 2 %}
