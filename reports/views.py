@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 import django_filters
 from django_filters.views import FilterView
 from django.db.models import Q
+import datetime
 
 # Create your views here.
 
@@ -61,6 +62,8 @@ class ComplaintReport(FormView, ListView):
             complaint_outcomes = complaint_outcomes.filter(complain__technician_id = int(technician)).select_related('complain')
 
         if start_date and end_date:
+            start_date = datetime.datetime.strptime(start_date, "%d/%m/%Y").strftime("%Y-%m-%d")
+            end_date = datetime.datetime.strptime(end_date, "%d/%m/%Y").strftime("%Y-%m-%d")
             complaint_outcomes = complaint_outcomes.filter(complain__date__range = (start_date, end_date)).select_related('complain')
 
         if water_filter:
