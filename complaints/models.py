@@ -101,6 +101,7 @@ class ComplainOutcome(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def clean_string(self, string):
+        import re
         # Replace newline characters with a space
         string = string.replace('\n', ' ')
         # Use regular expression to replace non-alphanumeric characters (excluding spaces) with an empty string
