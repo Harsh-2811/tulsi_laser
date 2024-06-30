@@ -100,6 +100,13 @@ class ComplainOutcome(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean_string(self, string):
+        # Replace newline characters with a space
+        string = string.replace('\n', ' ')
+        # Use regular expression to replace non-alphanumeric characters (excluding spaces) with an empty string
+        cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', string)
+        return cleaned_string
+
     def save(self, *args, **kwargs):
-        self.remark = str(self.remark)
+        self.remark = self.clean_string(self.remark)
         super(ComplainOutcome, self).save(*args, **kwargs)
