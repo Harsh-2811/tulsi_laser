@@ -99,3 +99,7 @@ class ComplainOutcome(models.Model):
     water_filter = models.BooleanField(default=False,null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        self.remark = str(self.remark)
+        super(ComplainOutcome, self).save(*args, **kwargs)
