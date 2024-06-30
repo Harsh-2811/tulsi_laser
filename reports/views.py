@@ -78,6 +78,8 @@ class ComplaintReport(FormView, ListView):
         if type_value:
             complaint_outcomes = complaint_outcomes.filter(complaint_type = type_value)
 
+        print("-------------")
+        print(complaint_outcomes)
         context['complaint_outcomes'] = complaint_outcomes
         
         
