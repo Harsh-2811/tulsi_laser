@@ -224,7 +224,7 @@
         },{ 
             name: 'watt',
             hidden: true
-        },"Company Name", "Company Mobile No",{
+        },"Company Name","Machine Id", "Engineer", "Company Mobile No",{
             name: "Complain Type",
             formatter: function (e, row) {
              if (row.cells[1].data == "Genuine"){
@@ -289,6 +289,8 @@
                 "{{ outcome.watt }}",
 
                 "{{ outcome.complain.customer.company_name }}",
+               "{{ outcome.complain.machine.code }}", 
+               "{{ outcome.technician.user.first_name }}", 
                 "{{ outcome.complain.customer.company_mobile_no }}",
                 "",
                 "{{ outcome.complain.issue }}",
