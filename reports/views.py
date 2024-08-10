@@ -53,10 +53,13 @@ class ComplaintReport(FormView, ListView):
             complaint_outcomes = complaint_outcomes.filter(complain__id = int(complain_id)).select_related('complain')
             read_only = True
         if customer:
+            print("Customer", customer)
             complaint_outcomes = complaint_outcomes.filter(complain__customer_id = int(customer)).select_related('complain')
-        
+            print(complaint_outcomes)
         if machine:
+            print("Machine", machine)
             complaint_outcomes = complaint_outcomes.filter(complain__machine_id = int(machine)).select_related('complain')
+            print(complaint_outcomes)
         
         if technician:
             complaint_outcomes = complaint_outcomes.filter(complain__technician_id = int(technician)).select_related('complain')
@@ -75,6 +78,8 @@ class ComplaintReport(FormView, ListView):
         if type_value:
             complaint_outcomes = complaint_outcomes.filter(complaint_type = type_value)
 
+        print("-------------")
+        print(complaint_outcomes)
         context['complaint_outcomes'] = complaint_outcomes
         
         

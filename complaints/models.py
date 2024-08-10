@@ -99,3 +99,15 @@ class ComplainOutcome(models.Model):
     water_filter = models.BooleanField(default=False,null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def clean_string(self, string):
+        import re
+        # Replace newline characters with a space
+        string = string.replace('\n', ' ')
+        # Use regular expression to replace non-alphanumeric characters (excluding spaces) with an empty string
+        cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', string)
+        return cleaned_string
+
+    def save(self, *args, **kwargs):
+        self.remark = self.clean_string(self.remark)
+        super(ComplainOutcome, self).save(*args, **kwargs)
