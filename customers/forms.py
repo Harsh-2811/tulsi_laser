@@ -78,5 +78,5 @@ class MachineForm(forms.ModelForm):
 
 MachineFormSet = inlineformset_factory(
     Customer, Machine, form=MachineForm,
-    extra=1, can_delete=True, can_delete_extra=True
+    extra=0, can_delete=True, can_delete_extra=True
 )

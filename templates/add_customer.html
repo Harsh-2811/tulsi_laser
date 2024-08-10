@@ -140,6 +140,7 @@
       $('.add-images').click(function(ev) {
           ev.preventDefault();
           var count = $('#item-images').children().length;
+          alert(count)
           var tmplMarkup = $('#images-template').html();
           var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
           $('#item-images').append(compiledTmpl);
