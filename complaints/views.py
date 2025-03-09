@@ -22,8 +22,37 @@ class ServiceFilter(django_filters.FilterSet):
         model = Service
         fields = ['status']
 
+class AddComplaint(CreateView):
+    form_class = ComplainForm
+    template_name = "add_data_form.html"
+    success_url = reverse_lazy('complaints')
+    model = Complain
 
-class Complaints(CreateView, FilterView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form_title"] = "Add Complaint" 
+        return context
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        if obj.technician:
+            obj.status = Complain.Statuses.pending
+        else:
+            obj.status = Complain.Statuses.new
+
+        from pyfcm import FCMNotification
+        from django.conf import settings
+
+        push_service = FCMNotification(api_key=settings.FCM_TOKEN)
+        try:
+            result = push_service.notify_single_device(registration_id=obj.technician.user.push_token, message_title="New Complain assigned to you.", message_body=f"Complain for machine {obj.machine.code} of {obj.customer.company_name}")
+        except:
+            pass
+        messages.success(self.request, "Complaint Generated successfully!!!")
+        
+        return super().form_valid(form)
+
+class Complaints(FilterView):
     form_class = ComplainForm
     template_name = "add_data_form.html"
     context_object_name = "complaints"
@@ -37,9 +66,9 @@ class Complaints(CreateView, FilterView):
         if queryset is None:
             self.object_list = self.model.objects.all()
         context = super().get_context_data(**kwargs)
-        context["form_title"] = "Add Complaint" 
         context["table_title"] = "Complaints" 
         context["show_lists"] = True
+        context["only_view"] = True
         if self.request.user.role == "technician":
             context["statuses"] = Complain.TechStatuses.choices
         else:
