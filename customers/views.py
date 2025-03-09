@@ -1,3 +1,5 @@
+import random
+import string
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render
@@ -104,7 +106,18 @@ class AddCustomer(CustomerInline, CreateView):
     def form_valid(self, form):
         username = self.request.POST['email']
         name = self.request.POST['company_name']
-        user = User.objects.create_user(username=username, email=username, first_name=name, password="TulsiLaser@123", role=User.Roles.customer)
+
+        def generate_random_string(length=4):
+            letters = string.ascii_lowercase
+            return ''.join(random.choice(letters) for i in range(length))
+
+        try:
+            user = User.objects.create_user(username=username, email=username, first_name=name, password="TulsiLaser@123", role=User.Roles.customer)
+        except Exception as e:
+            username = username + generate_random_string()
+            email = username.split('@')[0] + generate_random_string() + '@' + username.split('@')[1]
+            user = User.objects.create_user(username=username, email=email, first_name=name, password="TulsiLaser@123", role=User.Roles.customer)
+
         form.instance.user = user
         messages.success(self.request, "Customer added successfully!!!")
         return super().form_valid(form)
