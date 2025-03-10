@@ -34,7 +34,6 @@ def home(request):
                               warranty_end_date__month__gte=prev_month,
                               warranty_end_date__year__lte=current_year,
                               warranty_end_date__month__lte=current_month)
-    print(ending_months)
     if 'status' in request.GET:
         if request.GET['status'] != "0":
             complaints = complaints.filter(status = request.GET['status'])
